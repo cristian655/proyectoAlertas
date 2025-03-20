@@ -50,7 +50,5 @@ Se recomienda ajustar el parámetro contamination en Isolation Forest según la 
 
 Si no hay suficientes datos (menos de 10 registros) o si los valores contienen NaN, el análisis de anomalías no se ejecutará.
 
-📝 Licencia
 
-Este proyecto es de código abierto y se distribuye bajo la licencia MIT. ¡Siéntete libre de contribuir y mejorar el código! 🚀
 
