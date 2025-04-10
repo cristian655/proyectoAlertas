@@ -1,16 +1,23 @@
 # Entornos virtuales
 venv/
+venv310/
+
 # Archivos de Python
-__pycache__/ 
-*.pyc 
-*.pyo 
+__pycache__/
+*.pyc
+*.pyo
 *.pyd
+
 # Archivos de entorno y configuración local
-*.env 
-*.log 
-*.sqlite3
-# MacOS
-.DS_Store
-# Otros
-*.swp
 .env
+*.env
+*.log
+*.sqlite3
+
+# Archivos sensibles del proyecto
+conexion.py
+
+# Archivos de sistema
+.DS_Store
+*.swp
+Thumbs.db
