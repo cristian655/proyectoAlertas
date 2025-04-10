@@ -1,10 +1,16 @@
 # Entornos virtuales
-env/
+venv/
 # Archivos de Python
-__pycache__/ *.pyc *.pyo *.pyd
+__pycache__/ 
+*.pyc 
+*.pyo 
+*.pyd
 # Archivos de entorno y configuración local
-*.env *.log *.sqlite3
+*.env 
+*.log 
+*.sqlite3
 # MacOS
 .DS_Store
 # Otros
 *.swp
+.env

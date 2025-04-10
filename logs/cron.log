@@ -391,3 +391,7 @@ sqlalchemy.exc.NoSuchColumnError: Could not locate column in row for column 'con
 [INFO] Procedimiento 'marcar_pozos_detenidos' ejecutado con parámetro horas=4
 === CRON EJECUTADO Thu Apr 10 15:15:01 UTC 2025 ===
 [INFO] Procedimiento 'marcar_pozos_detenidos' ejecutado con parámetro horas=4
+=== CRON EJECUTADO Thu Apr 10 16:15:01 UTC 2025 ===
+[INFO] Procedimiento 'marcar_pozos_detenidos' ejecutado con parámetro horas=4
+=== CRON EJECUTADO Thu Apr 10 17:15:01 UTC 2025 ===
+[INFO] Procedimiento 'marcar_pozos_detenidos' ejecutado con parámetro horas=4
