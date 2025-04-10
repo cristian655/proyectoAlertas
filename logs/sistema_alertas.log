@@ -1,0 +1,270 @@
+2025-04-03 20:15:58 [INFO] [OK] Sensor 162 dentro de rango.
+2025-04-03 20:15:58 [INFO] [OK] Sensor 167 dentro de rango.
+2025-04-03 20:15:58 [INFO] [OK] Sensor 170 dentro de rango.
+2025-04-03 20:15:58 [INFO] [OK] Sensor 174 dentro de rango.
+2025-04-03 20:15:58 [INFO] [OK] Sensor 178 dentro de rango.
+2025-04-03 20:15:58 [INFO] [OK] Sensor 182 dentro de rango.
+2025-04-03 20:15:58 [INFO] [OK] Sensor 186 dentro de rango.
+2025-04-03 20:15:58 [INFO] [OK] Sensor 190 dentro de rango.
+2025-04-03 20:15:58 [INFO] [OK] Sensor 194 dentro de rango.
+2025-04-03 20:15:58 [INFO] [OK] Sensor 198 dentro de rango.
+2025-04-03 20:15:58 [INFO] [OK] Sensor 202 dentro de rango.
+2025-04-03 20:15:58 [INFO] [OK] Sensor 206 dentro de rango.
+2025-04-03 20:15:58 [INFO] [OK] Sensor 210 dentro de rango.
+2025-04-03 20:15:58 [INFO] [OK] Sensor 215 dentro de rango.
+2025-04-03 20:15:58 [INFO] [OK] Sensor 219 dentro de rango.
+2025-04-03 20:15:58 [INFO] [FIN] Revisión de nuevos datos finalizada.
+
+2025-04-03 20:15:58 [INFO] [VIGENTE] Alerta aún activa para sensor 152
+2025-04-03 20:15:58 [INFO] [FIN] Verificación de alertas activas finalizada.
+2025-04-03 20:15:58 [INFO] [INICIO] Revisión de pozos detenidos...
+2025-04-03 20:15:58 [INFO] Procedimiento 'marcar_pozos_detenidos' ejecutado con parámetro horas=4
+2025-04-03 20:15:58 [INFO] [FIN] Revisión de pozos detenidos y recuperados.
+2025-04-04 01:14:16 [INFO] [OK] Sensor 110 dentro de rango.
+2025-04-04 01:14:16 [INFO] [OK] Sensor 116 dentro de rango.
+2025-04-04 01:14:16 [INFO] [OK] Sensor 120 dentro de rango.
+2025-04-04 01:14:16 [INFO] [OK] Sensor 125 dentro de rango.
+2025-04-04 01:14:16 [INFO] [OK] Sensor 129 dentro de rango.
+2025-04-04 01:14:16 [INFO] [OK] Sensor 133 dentro de rango.
+2025-04-04 01:14:16 [INFO] [OK] Sensor 137 dentro de rango.
+2025-04-04 01:14:16 [INFO] [OK] Sensor 141 dentro de rango.
+2025-04-04 01:14:16 [INFO] [OK] Sensor 146 dentro de rango.
+2025-04-04 01:14:16 [INFO] [OK] Sensor 152 dentro de rango.
+2025-04-04 01:14:16 [INFO] [OK] Sensor 157 dentro de rango.
+2025-04-04 01:14:16 [INFO] [OK] Sensor 162 dentro de rango.
+2025-04-04 01:14:16 [INFO] [OK] Sensor 167 dentro de rango.
+2025-04-04 01:14:16 [INFO] [OK] Sensor 170 dentro de rango.
+2025-04-04 01:14:16 [INFO] [OK] Sensor 174 dentro de rango.
+2025-04-04 01:14:16 [INFO] [OK] Sensor 178 dentro de rango.
+2025-04-04 01:14:16 [INFO] [OK] Sensor 182 dentro de rango.
+2025-04-04 01:14:16 [INFO] [OK] Sensor 186 dentro de rango.
+2025-04-04 01:14:16 [INFO] [OK] Sensor 190 dentro de rango.
+2025-04-04 01:14:16 [INFO] [OK] Sensor 194 dentro de rango.
+2025-04-04 01:14:16 [INFO] [OK] Sensor 198 dentro de rango.
+2025-04-04 01:14:16 [INFO] [OK] Sensor 202 dentro de rango.
+2025-04-04 01:14:16 [INFO] [OK] Sensor 206 dentro de rango.
+2025-04-04 01:14:16 [INFO] [OK] Sensor 210 dentro de rango.
+2025-04-04 01:14:16 [INFO] [OK] Sensor 215 dentro de rango.
+2025-04-04 01:14:16 [INFO] [OK] Sensor 219 dentro de rango.
+2025-04-04 01:14:16 [INFO] [FIN] Revisión de nuevos datos finalizada.
+
+2025-04-04 01:14:16 [INFO] [RESUELTA] Alerta desactivada para sensor 219
+2025-04-04 01:14:16 [INFO] [FIN] Verificación de alertas activas finalizada.
+2025-04-04 01:14:16 [INFO] [INICIO] Revisión de pozos detenidos...
+2025-04-04 01:14:16 [INFO] Procedimiento 'marcar_pozos_detenidos' ejecutado con parámetro horas=4
+2025-04-04 01:14:16 [INFO] [FIN] Revisión de pozos detenidos y recuperados.
+2025-04-04 11:31:38 [INFO] [INICIO] Revision de sensores con umbrales...
+2025-04-04 11:31:38 [INFO] [OK] Sensor 110 dentro de rango.
+2025-04-04 11:31:38 [INFO] [OK] Sensor 116 dentro de rango.
+2025-04-04 11:31:38 [INFO] [OK] Sensor 120 dentro de rango.
+2025-04-04 11:31:38 [INFO] [OK] Sensor 125 dentro de rango.
+2025-04-04 11:31:38 [INFO] [OK] Sensor 129 dentro de rango.
+2025-04-04 11:31:38 [INFO] [OK] Sensor 133 dentro de rango.
+2025-04-04 11:31:38 [INFO] [OK] Sensor 137 dentro de rango.
+2025-04-04 11:31:38 [INFO] [OK] Sensor 141 dentro de rango.
+2025-04-04 11:31:38 [INFO] [OK] Sensor 146 dentro de rango.
+2025-04-04 11:31:38 [INFO] [OK] Sensor 152 dentro de rango.
+2025-04-04 11:31:38 [INFO] [OK] Sensor 157 dentro de rango.
+2025-04-04 11:31:38 [INFO] [OK] Sensor 162 dentro de rango.
+2025-04-04 11:31:38 [INFO] [OK] Sensor 167 dentro de rango.
+2025-04-04 11:31:38 [INFO] [OK] Sensor 170 dentro de rango.
+2025-04-04 11:31:38 [INFO] [OK] Sensor 174 dentro de rango.
+2025-04-04 11:31:38 [INFO] [OK] Sensor 178 dentro de rango.
+2025-04-04 11:31:38 [INFO] [OK] Sensor 182 dentro de rango.
+2025-04-04 11:31:38 [INFO] [OK] Sensor 186 dentro de rango.
+2025-04-04 11:31:38 [INFO] [OK] Sensor 190 dentro de rango.
+2025-04-04 11:31:38 [INFO] [OK] Sensor 194 dentro de rango.
+2025-04-04 11:31:38 [INFO] [OK] Sensor 198 dentro de rango.
+2025-04-04 11:31:38 [INFO] [OK] Sensor 202 dentro de rango.
+2025-04-04 11:31:38 [INFO] [OK] Sensor 206 dentro de rango.
+2025-04-04 11:31:38 [INFO] [OK] Sensor 210 dentro de rango.
+2025-04-04 11:31:38 [INFO] [OK] Sensor 215 dentro de rango.
+2025-04-04 11:31:38 [INFO] [OK] Sensor 219 dentro de rango.
+2025-04-04 11:31:38 [INFO] [FIN] Revision de nuevos datos finalizada.
+
+2025-04-04 11:31:38 [INFO] [RESUELTA] Alerta desactivada para sensor 219
+2025-04-04 11:31:38 [INFO] [FIN] Verificacion de alertas activas finalizada.
+2025-04-04 11:31:38 [INFO] [INICIO] Revision de pozos detenidos...
+2025-04-04 11:31:38 [INFO] Procedimiento 'marcar_pozos_detenidos' ejecutado con parámetro horas=4
+2025-04-04 11:31:38 [INFO] [FIN] Revision de pozos detenidos y recuperados.
+2025-04-04 12:17:12 [INFO] [INICIO] Revision de sensores con umbrales...
+2025-04-04 12:17:12 [INFO] [OK] Sensor 110 dentro de rango.
+2025-04-04 12:17:12 [INFO] [OK] Sensor 116 dentro de rango.
+2025-04-04 12:17:12 [INFO] [OK] Sensor 120 dentro de rango.
+2025-04-04 12:17:12 [INFO] [OK] Sensor 125 dentro de rango.
+2025-04-04 12:17:12 [INFO] [OK] Sensor 129 dentro de rango.
+2025-04-04 12:17:12 [INFO] [OK] Sensor 133 dentro de rango.
+2025-04-04 12:17:12 [INFO] [OK] Sensor 137 dentro de rango.
+2025-04-04 12:17:12 [INFO] [OK] Sensor 141 dentro de rango.
+2025-04-04 12:17:12 [INFO] [OK] Sensor 146 dentro de rango.
+2025-04-04 12:17:12 [INFO] [OK] Sensor 152 dentro de rango.
+2025-04-04 12:17:12 [INFO] [OK] Sensor 157 dentro de rango.
+2025-04-04 12:17:12 [INFO] [OK] Sensor 162 dentro de rango.
+2025-04-04 12:17:12 [INFO] [OK] Sensor 167 dentro de rango.
+2025-04-04 12:17:12 [INFO] [OK] Sensor 170 dentro de rango.
+2025-04-04 12:17:12 [INFO] [OK] Sensor 174 dentro de rango.
+2025-04-04 12:17:12 [INFO] [OK] Sensor 178 dentro de rango.
+2025-04-04 12:17:12 [INFO] [OK] Sensor 182 dentro de rango.
+2025-04-04 12:17:12 [INFO] [OK] Sensor 186 dentro de rango.
+2025-04-04 12:17:12 [INFO] [OK] Sensor 190 dentro de rango.
+2025-04-04 12:17:12 [INFO] [OK] Sensor 194 dentro de rango.
+2025-04-04 12:17:12 [INFO] [OK] Sensor 198 dentro de rango.
+2025-04-04 12:17:12 [INFO] [OK] Sensor 202 dentro de rango.
+2025-04-04 12:17:12 [INFO] [OK] Sensor 206 dentro de rango.
+2025-04-04 12:17:12 [INFO] [OK] Sensor 210 dentro de rango.
+2025-04-04 12:17:12 [INFO] [OK] Sensor 215 dentro de rango.
+2025-04-04 12:17:12 [INFO] [OK] Sensor 219 dentro de rango.
+2025-04-04 12:17:12 [INFO] [FIN] Revision de nuevos datos finalizada.
+
+2025-04-04 12:17:12 [INFO] [RESUELTA] Alerta desactivada para sensor 219
+2025-04-04 12:17:12 [INFO] [FIN] Verificacion de alertas activas finalizada.
+2025-04-04 12:17:12 [INFO] [INICIO] Revision de pozos detenidos...
+2025-04-04 12:17:12 [INFO] Procedimiento 'marcar_pozos_detenidos' ejecutado con parámetro horas=4
+2025-04-04 12:17:12 [INFO] [FIN] Revision de pozos detenidos y recuperados.
+2025-04-04 12:21:09 [INFO] [INICIO] Revision de sensores con umbrales...
+2025-04-04 12:21:09 [INFO] [OK] Sensor 110 dentro de rango.
+2025-04-04 12:21:09 [INFO] [OK] Sensor 116 dentro de rango.
+2025-04-04 12:21:09 [INFO] [OK] Sensor 120 dentro de rango.
+2025-04-04 12:21:09 [INFO] [OK] Sensor 125 dentro de rango.
+2025-04-04 12:21:09 [INFO] [OK] Sensor 129 dentro de rango.
+2025-04-04 12:21:09 [INFO] [OK] Sensor 133 dentro de rango.
+2025-04-04 12:21:09 [INFO] [OK] Sensor 137 dentro de rango.
+2025-04-04 12:21:09 [INFO] [OK] Sensor 141 dentro de rango.
+2025-04-04 12:21:09 [INFO] [OK] Sensor 146 dentro de rango.
+2025-04-04 12:21:09 [INFO] [OK] Sensor 152 dentro de rango.
+2025-04-04 12:21:09 [INFO] [OK] Sensor 157 dentro de rango.
+2025-04-04 12:21:09 [INFO] [OK] Sensor 162 dentro de rango.
+2025-04-04 12:21:09 [INFO] [OK] Sensor 167 dentro de rango.
+2025-04-04 12:21:09 [INFO] [OK] Sensor 170 dentro de rango.
+2025-04-04 12:21:09 [INFO] [OK] Sensor 174 dentro de rango.
+2025-04-04 12:21:09 [INFO] [OK] Sensor 178 dentro de rango.
+2025-04-04 12:21:09 [INFO] [OK] Sensor 182 dentro de rango.
+2025-04-04 12:21:09 [INFO] [OK] Sensor 186 dentro de rango.
+2025-04-04 12:21:09 [INFO] [OK] Sensor 190 dentro de rango.
+2025-04-04 12:21:09 [INFO] [OK] Sensor 194 dentro de rango.
+2025-04-04 12:21:09 [INFO] [OK] Sensor 198 dentro de rango.
+2025-04-04 12:21:09 [INFO] [OK] Sensor 202 dentro de rango.
+2025-04-04 12:21:09 [INFO] [OK] Sensor 206 dentro de rango.
+2025-04-04 12:21:09 [INFO] [OK] Sensor 210 dentro de rango.
+2025-04-04 12:21:09 [INFO] [OK] Sensor 215 dentro de rango.
+2025-04-04 12:21:09 [INFO] [OK] Sensor 219 dentro de rango.
+2025-04-04 12:21:09 [INFO] [FIN] Revision de nuevos datos finalizada.
+
+2025-04-04 12:21:09 [INFO] [RESUELTA] Alerta desactivada para sensor 219
+2025-04-04 12:21:09 [INFO] [FIN] Verificacion de alertas activas finalizada.
+2025-04-04 12:21:09 [INFO] [INICIO] Revision de pozos detenidos...
+2025-04-04 12:21:09 [INFO] Procedimiento 'marcar_pozos_detenidos' ejecutado con parámetro horas=4
+2025-04-04 12:21:09 [INFO] [FIN] Revision de pozos detenidos y recuperados.
+2025-04-04 12:33:59 [INFO] [INICIO] Revision de sensores con umbrales...
+2025-04-04 12:33:59 [INFO] [OK] Sensor 110 dentro de rango.
+2025-04-04 12:33:59 [INFO] [OK] Sensor 116 dentro de rango.
+2025-04-04 12:33:59 [INFO] [OK] Sensor 120 dentro de rango.
+2025-04-04 12:33:59 [INFO] [OK] Sensor 125 dentro de rango.
+2025-04-04 12:33:59 [INFO] [OK] Sensor 129 dentro de rango.
+2025-04-04 12:33:59 [INFO] [OK] Sensor 133 dentro de rango.
+2025-04-04 12:33:59 [INFO] [OK] Sensor 137 dentro de rango.
+2025-04-04 12:33:59 [INFO] [OK] Sensor 141 dentro de rango.
+2025-04-04 12:33:59 [INFO] [OK] Sensor 146 dentro de rango.
+2025-04-04 12:33:59 [INFO] [OK] Sensor 152 dentro de rango.
+2025-04-04 12:33:59 [INFO] [OK] Sensor 157 dentro de rango.
+2025-04-04 12:33:59 [INFO] [OK] Sensor 162 dentro de rango.
+2025-04-04 12:33:59 [INFO] [OK] Sensor 167 dentro de rango.
+2025-04-04 12:33:59 [INFO] [OK] Sensor 170 dentro de rango.
+2025-04-04 12:33:59 [INFO] [OK] Sensor 174 dentro de rango.
+2025-04-04 12:33:59 [INFO] [OK] Sensor 178 dentro de rango.
+2025-04-04 12:33:59 [INFO] [OK] Sensor 182 dentro de rango.
+2025-04-04 12:33:59 [INFO] [OK] Sensor 186 dentro de rango.
+2025-04-04 12:33:59 [INFO] [OK] Sensor 190 dentro de rango.
+2025-04-04 12:33:59 [INFO] [OK] Sensor 194 dentro de rango.
+2025-04-04 12:33:59 [INFO] [OK] Sensor 198 dentro de rango.
+2025-04-04 12:33:59 [INFO] [OK] Sensor 202 dentro de rango.
+2025-04-04 12:33:59 [INFO] [OK] Sensor 206 dentro de rango.
+2025-04-04 12:33:59 [INFO] [OK] Sensor 210 dentro de rango.
+2025-04-04 12:33:59 [INFO] [OK] Sensor 215 dentro de rango.
+2025-04-04 12:33:59 [INFO] [OK] Sensor 219 dentro de rango.
+2025-04-04 12:33:59 [INFO] [FIN] Revision de nuevos datos finalizada.
+
+2025-04-04 12:33:59 [INFO] [RESUELTA] Alerta desactivada para sensor 219
+2025-04-04 12:33:59 [INFO] [FIN] Verificacion de alertas activas finalizada.
+2025-04-04 12:33:59 [INFO] [INICIO] Revision de pozos detenidos...
+2025-04-04 12:33:59 [INFO] Procedimiento 'marcar_pozos_detenidos' ejecutado con parámetro horas=4
+2025-04-04 12:33:59 [INFO] [FIN] Revision de pozos detenidos y recuperados.
+2025-04-04 16:18:09 [INFO] [INICIO] Revision de sensores con umbrales...
+2025-04-04 16:18:09 [INFO] [OK] Sensor 110 dentro de rango.
+2025-04-04 16:18:09 [INFO] [OK] Sensor 116 dentro de rango.
+2025-04-04 16:18:09 [INFO] [OK] Sensor 120 dentro de rango.
+2025-04-04 16:18:09 [INFO] [OK] Sensor 125 dentro de rango.
+2025-04-04 16:18:09 [INFO] [OK] Sensor 129 dentro de rango.
+2025-04-04 16:18:09 [INFO] [OK] Sensor 133 dentro de rango.
+2025-04-04 16:18:09 [INFO] [OK] Sensor 137 dentro de rango.
+2025-04-04 16:18:09 [INFO] [OK] Sensor 141 dentro de rango.
+2025-04-04 16:18:09 [INFO] [OK] Sensor 146 dentro de rango.
+2025-04-04 16:18:09 [WARNING] [ALERTA] Nueva alarma registrada para sensor 152
+2025-04-04 16:18:09 [INFO] [EMAIL] Envío de correos deshabilitado por configuración.
+2025-04-04 16:18:09 [INFO] [OK] Sensor 157 dentro de rango.
+2025-04-04 16:18:09 [INFO] [OK] Sensor 162 dentro de rango.
+2025-04-04 16:18:09 [INFO] [OK] Sensor 167 dentro de rango.
+2025-04-04 16:18:09 [INFO] [OK] Sensor 170 dentro de rango.
+2025-04-04 16:18:09 [INFO] [OK] Sensor 174 dentro de rango.
+2025-04-04 16:18:09 [INFO] [OK] Sensor 178 dentro de rango.
+2025-04-04 16:18:09 [INFO] [OK] Sensor 182 dentro de rango.
+2025-04-04 16:18:09 [INFO] [OK] Sensor 186 dentro de rango.
+2025-04-04 16:18:09 [INFO] [OK] Sensor 190 dentro de rango.
+2025-04-04 16:18:09 [INFO] [OK] Sensor 194 dentro de rango.
+2025-04-04 16:18:09 [INFO] [OK] Sensor 198 dentro de rango.
+2025-04-04 16:18:09 [INFO] [OK] Sensor 202 dentro de rango.
+2025-04-04 16:18:09 [INFO] [OK] Sensor 206 dentro de rango.
+2025-04-04 16:18:09 [INFO] [OK] Sensor 210 dentro de rango.
+2025-04-04 16:18:09 [INFO] [OK] Sensor 215 dentro de rango.
+2025-04-04 16:18:09 [INFO] [OK] Sensor 219 dentro de rango.
+2025-04-04 16:18:09 [INFO] [FIN] Revision de nuevos datos finalizada.
+
+2025-04-04 16:18:09 [INFO] [VIGENTE] Alerta aun activa para sensor 152
+2025-04-04 16:18:09 [INFO] [FIN] Verificacion de alertas activas finalizada.
+2025-04-04 16:18:09 [INFO] [INICIO] Revision de pozos detenidos...
+2025-04-04 16:18:09 [INFO] Procedimiento 'marcar_pozos_detenidos' ejecutado con parámetro horas=4
+2025-04-04 16:18:09 [INFO] Sensor 218 volvió a emitir datos (alerta resuelta).
+2025-04-04 16:18:09 [INFO] Sensor 219 volvió a emitir datos (alerta resuelta).
+2025-04-04 16:18:09 [INFO] Sensor 220 volvió a emitir datos (alerta resuelta).
+2025-04-04 16:18:09 [INFO] Sensor 247 volvió a emitir datos (alerta resuelta).
+2025-04-04 16:18:09 [INFO] Sensor 273 volvió a emitir datos (alerta resuelta).
+2025-04-04 16:18:09 [INFO] [FIN] Revision de pozos detenidos y recuperados.
+2025-04-04 16:19:04 [INFO] [INICIO] Revision de sensores con umbrales...
+2025-04-04 16:19:04 [INFO] [OK] Sensor 110 dentro de rango.
+2025-04-04 16:19:04 [INFO] [OK] Sensor 116 dentro de rango.
+2025-04-04 16:19:04 [INFO] [OK] Sensor 120 dentro de rango.
+2025-04-04 16:19:04 [INFO] [OK] Sensor 125 dentro de rango.
+2025-04-04 16:19:04 [INFO] [OK] Sensor 129 dentro de rango.
+2025-04-04 16:19:04 [INFO] [OK] Sensor 133 dentro de rango.
+2025-04-04 16:19:04 [INFO] [OK] Sensor 137 dentro de rango.
+2025-04-04 16:19:04 [INFO] [OK] Sensor 141 dentro de rango.
+2025-04-04 16:19:04 [INFO] [OK] Sensor 146 dentro de rango.
+2025-04-04 16:19:04 [INFO] [OMITIDA] Alarma ya registrada para sensor 152, se omite.
+2025-04-04 16:19:04 [INFO] [OK] Sensor 157 dentro de rango.
+2025-04-04 16:19:04 [INFO] [OK] Sensor 162 dentro de rango.
+2025-04-04 16:19:04 [INFO] [OK] Sensor 167 dentro de rango.
+2025-04-04 16:19:04 [INFO] [OK] Sensor 170 dentro de rango.
+2025-04-04 16:19:04 [INFO] [OK] Sensor 174 dentro de rango.
+2025-04-04 16:19:04 [INFO] [OK] Sensor 178 dentro de rango.
+2025-04-04 16:19:05 [INFO] [OK] Sensor 182 dentro de rango.
+2025-04-04 16:19:05 [INFO] [OK] Sensor 186 dentro de rango.
+2025-04-04 16:19:05 [INFO] [OK] Sensor 190 dentro de rango.
+2025-04-04 16:19:05 [INFO] [OK] Sensor 194 dentro de rango.
+2025-04-04 16:19:05 [INFO] [OK] Sensor 198 dentro de rango.
+2025-04-04 16:19:05 [INFO] [OK] Sensor 202 dentro de rango.
+2025-04-04 16:19:05 [INFO] [OK] Sensor 206 dentro de rango.
+2025-04-04 16:19:05 [INFO] [OK] Sensor 210 dentro de rango.
+2025-04-04 16:19:05 [INFO] [OK] Sensor 215 dentro de rango.
+2025-04-04 16:19:05 [INFO] [OK] Sensor 219 dentro de rango.
+2025-04-04 16:19:05 [INFO] [FIN] Revision de nuevos datos finalizada.
+
+2025-04-04 16:19:05 [INFO] [VIGENTE] Alerta aun activa para sensor 152
+2025-04-04 16:19:05 [INFO] [FIN] Verificacion de alertas activas finalizada.
+2025-04-04 16:19:05 [INFO] [INICIO] Revision de pozos detenidos...
+2025-04-04 16:19:05 [INFO] Procedimiento 'marcar_pozos_detenidos' ejecutado con parámetro horas=4
+2025-04-04 16:19:05 [INFO] Sensor 218 volvió a emitir datos (alerta resuelta).
+2025-04-04 16:19:05 [INFO] Sensor 219 volvió a emitir datos (alerta resuelta).
+2025-04-04 16:19:05 [INFO] Sensor 220 volvió a emitir datos (alerta resuelta).
+2025-04-04 16:19:05 [INFO] Sensor 247 volvió a emitir datos (alerta resuelta).
+2025-04-04 16:19:05 [INFO] Sensor 273 volvió a emitir datos (alerta resuelta).
+2025-04-04 16:19:05 [INFO] [FIN] Revision de pozos detenidos y recuperados.
