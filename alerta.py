@@ -43,6 +43,10 @@ def obtener_ultima_lectura(sensor_id, estacion_id):
 
 def registrar_alarma_persistente(sensor_id, estacion_id, fecha_hora, valor, criterio_id=2, observacion=None):
     with engine.begin() as conn:
+        nombre_estacion = conn.execute(text("""
+            SELECT nombre FROM Estaciones WHERE estacion_id = :id
+        """), {"id": estacion_id}).scalar()
+
         ultima = conn.execute(text("""
             SELECT alerta_id, timestamp, contador
             FROM Alertas
@@ -76,7 +80,7 @@ def registrar_alarma_persistente(sensor_id, estacion_id, fecha_hora, valor, crit
                 "observacion": observacion
             })
             logger.warning("[ALERTA] Alarma actualizada para sensor {}".format(sensor_id))
-            notificar_alerta(sensor_id, estacion_id, valor, ultima["contador"] + 1)
+            notificar_alerta(sensor_id, nombre_estacion, valor, ultima["contador"] + 1)
 
         else:
             conn.execute(text("""
@@ -94,7 +98,7 @@ def registrar_alarma_persistente(sensor_id, estacion_id, fecha_hora, valor, crit
                 "observacion": observacion
             })
             logger.warning("[ALERTA] Nueva alarma registrada para sensor {}".format(sensor_id))
-            notificar_alerta(sensor_id, estacion_id, valor, 1)
+            notificar_alerta(sensor_id, nombre_estacion, valor, 1)
 
 
 def verificar_alertas_activas():

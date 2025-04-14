@@ -34,11 +34,11 @@ def enviar_correo(destinatarios, asunto, cuerpo):
     except Exception as e:
         logger.error(f"[EMAIL] Error al enviar correo: {e}")
 
-def notificar_alerta(sensor_id, estacion, valor, contador):
+def notificar_alerta(sensor_id, nombre_estacion, valor, contador):
     asunto = "⚠️ Alerta de Umbral Superado"
     cuerpo = (
         f"Se ha detectado un valor fuera de rango en el sensor {sensor_id} "
-        f"de la estación {estacion}. Valor: {valor}.\n\n"
+        f"de la estación {nombre_estacion}. Valor: {valor}.\n\n"
     )
 
     if contador == 1:
