@@ -46,6 +46,10 @@ def registrar_alarma_persistente(sensor_id, estacion_id, fecha_hora, valor, crit
         nombre_estacion = conn.execute(text("""
             SELECT nombre FROM Estaciones WHERE estacion_id = :id
         """), {"id": estacion_id}).scalar()
+        
+        tipo_sensor = conn.execute(text("""
+            SELECT tipo_raw FROM Sensores WHERE sensor_id = :id
+        """), {"id": sensor_id}).scalar()
 
         ultima = conn.execute(text("""
             SELECT alerta_id, timestamp, contador
@@ -80,7 +84,7 @@ def registrar_alarma_persistente(sensor_id, estacion_id, fecha_hora, valor, crit
                 "observacion": observacion
             })
             logger.warning("[ALERTA] Alarma actualizada para sensor {}".format(sensor_id))
-            notificar_alerta(sensor_id, nombre_estacion, valor, ultima["contador"] + 1)
+            notificar_alerta(tipo_sensor, nombre_estacion, valor, ultima["contador"] + 1)
 
         else:
             conn.execute(text("""
