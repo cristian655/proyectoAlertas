@@ -1,13 +1,17 @@
 # enviar_correo.py
+import os
+from dotenv import load_dotenv
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from logger import logger
 
+load_dotenv()
+
 ENVIAR_CORREO = True  # True para habilitar
 
 REMITENTE = "crgonzalezh@gmail.com"
-PASSWORD = "cids nbjo nclr vfnt"  # mover a una variable de entorno
+PASSWORD = os.getenv("EMAIL_PASSWORD") # mover a una variable de entorno
 SMTP_SERVER = "smtp.gmail.com"
 SMTP_PORT = 587
 
