@@ -11,7 +11,7 @@ load_dotenv()
 ENVIAR_CORREO = True  # True para habilitar
 
 REMITENTE = "crgonzalezh@gmail.com"
-PASSWORD = os.getenv("EMAIL_PASSWORD") # mover a una variable de entorno
+PASSWORD = os.getenv("EMAIL_PASSWORD") 
 SMTP_SERVER = "smtp.gmail.com"
 SMTP_PORT = 587
 
