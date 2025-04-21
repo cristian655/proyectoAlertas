@@ -8,15 +8,16 @@ from logger import logger
 
 load_dotenv()
 
-ENVIAR_CORREO = True  # True para habilitar
+ENVIAR_CORREO = True
 
-REMITENTE = "crgonzalezh@gmail.com"
-PASSWORD = os.getenv("EMAIL_PASSWORD") 
-SMTP_SERVER = "smtp.gmail.com"
+REMITENTE = "erivas@gpconsultores.cl"
+SMTP_SERVER = "email-smtp.us-east-2.amazonaws.com"
 SMTP_PORT = 587
+SMTP_USER = os.getenv("SMTP_USER")
+SMTP_PASS = os.getenv("SMTP_PASS")
 
-DESTINATARIOS_POR_DEFECTO = ["crgonzalezh@gmail.com"]
-UMBRAL_ENVIO_REPETICION = 3  #  umbral para modificar 
+DESTINATARIOS_POR_DEFECTO = ["erivas@gpconsultores.cl", "cgonzalez@gpconsultores.cl"]
+UMBRAL_ENVIO_REPETICION = 3
 
 def enviar_correo(destinatarios, asunto, cuerpo):
     if not ENVIAR_CORREO:
@@ -32,7 +33,7 @@ def enviar_correo(destinatarios, asunto, cuerpo):
     try:
         with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as servidor:
             servidor.starttls()
-            servidor.login(REMITENTE, PASSWORD)
+            servidor.login(SMTP_USER, SMTP_PASS)
             servidor.sendmail(REMITENTE, destinatarios, msg.as_string())
             logger.info(f"[EMAIL] Correo enviado a {destinatarios}.")
     except Exception as e:
@@ -49,7 +50,18 @@ def notificar_alerta(tipo_sensor, nombre_estacion, valor, contador):
         cuerpo += "⚠️ Esta es la primera vez que se detecta esta alerta."
         enviar_correo(DESTINATARIOS_POR_DEFECTO, asunto, cuerpo)
     elif contador == UMBRAL_ENVIO_REPETICION:
-        cuerpo += (
-            f"⏳ La alerta ha persistido durante {UMBRAL_ENVIO_REPETICION} revisiones consecutivas."
-        )
+        cuerpo += f"⏳ La alerta ha persistido durante {UMBRAL_ENVIO_REPETICION} revisiones consecutivas."
         enviar_correo(DESTINATARIOS_POR_DEFECTO, asunto, cuerpo)
+def probar_envio_correo():
+    asunto = "📧 Prueba de Envío desde Amazon SES"
+    cuerpo = (
+        "Hola,\n\n"
+        "Este es un correo de prueba enviado desde el sistema de alertas usando Amazon SES via SMTP.\n\n"
+        "Saludos,\nSistema de Monitoreo"
+    )
+    enviar_correo(DESTINATARIOS_POR_DEFECTO, asunto, cuerpo)
+
+
+# Ejecutar prueba directa si se corre este script
+if __name__ == "__main__":
+    probar_envio_correo()
