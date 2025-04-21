@@ -39,7 +39,7 @@ def enviar_correo(destinatarios, asunto, cuerpo):
     except Exception as e:
         logger.error(f"[EMAIL] Error al enviar correo: {e}")
 
-def notificar_alerta(tipo_sensor, nombre_estacion, valor, contador):
+def notificar_alerta(tipo_sensor, nombre_estacion, valor, contador, fecha_hora):
     asunto = "⚠️ Alerta de Umbral Superado"
     cuerpo = (
         f"Se ha detectado un valor fuera de rango en el sensor {tipo_sensor} "
@@ -47,11 +47,13 @@ def notificar_alerta(tipo_sensor, nombre_estacion, valor, contador):
     )
 
     if contador == 1:
-        cuerpo += "⚠️ Esta es la primera vez que se detecta esta alerta."
+        cuerpo += f"⚠️ Esta es la primera vez que se detecta esta alerta. 🕒 ({fecha_hora})"
         enviar_correo(DESTINATARIOS_POR_DEFECTO, asunto, cuerpo)
+
     elif contador == UMBRAL_ENVIO_REPETICION:
-        cuerpo += f"⏳ La alerta ha persistido durante {UMBRAL_ENVIO_REPETICION} revisiones consecutivas."
+        cuerpo += f"⏳ La alerta ha persistido durante {UMBRAL_ENVIO_REPETICION} revisiones consecutivas partiendo a las {fecha_hora}"
         enviar_correo(DESTINATARIOS_POR_DEFECTO, asunto, cuerpo)
+
 def probar_envio_correo():
     asunto = "📧 Prueba de Envío desde Amazon SES"
     cuerpo = (

@@ -84,7 +84,7 @@ def registrar_alarma_persistente(sensor_id, estacion_id, fecha_hora, valor, crit
                 "observacion": observacion
             })
             logger.warning("[ALERTA] Alarma actualizada para sensor {}".format(sensor_id))
-            notificar_alerta(tipo_sensor, nombre_estacion, valor, ultima["contador"] + 1)
+            notificar_alerta(tipo_sensor, nombre_estacion, valor, ultima["contador"] + 1, fecha_hora)
 
         else:
             conn.execute(text("""
@@ -102,7 +102,7 @@ def registrar_alarma_persistente(sensor_id, estacion_id, fecha_hora, valor, crit
                 "observacion": observacion
             })
             logger.warning("[ALERTA] Nueva alarma registrada para sensor {}".format(sensor_id))
-            notificar_alerta(tipo_sensor, nombre_estacion, valor, 1)
+            notificar_alerta(tipo_sensor, nombre_estacion, valor, 1, fecha_hora)
 
 
 def verificar_alertas_activas():
