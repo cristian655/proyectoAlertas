@@ -144,9 +144,20 @@ def verificar_alertas_activas():
                 logger.info("[VIGENTE] Alerta aun activa para sensor {}".format(sensor_id))
 
 
+#Función para invocar el procedimiento de limpieza
+def limpiar_alertas_inactivas(dias: int = 15):
+    try:
+        with engine.begin() as conn:
+            conn.execute(text("CALL limpiar_alertas_inactivas(:dias)"), {"dias": dias})
+            logger.info(f"[LIMPIEZA] Alertas inactivas eliminadas (criterio_id=1, >{dias} días o todas si 0)")
+    except Exception as e:
+        logger.error(f"[ERROR] Fallo al ejecutar limpieza de alertas inactivas: {e}")
+
+
 # ------------------------------------
 # BLOQUE PRINCIPAL
 # ------------------------------------
+
 if __name__ == "__main__":
     logger.info("[INICIO] Revision de sensores con umbrales...")
 
@@ -183,3 +194,6 @@ if __name__ == "__main__":
     detectar_pozos_detenidos(horas=4)
     resolver_pozos_recuperados()
     logger.info("[FIN] Revision de pozos detenidos y recuperados.")
+
+    # 🔽 Limpieza de alertas inactivas
+    limpiar_alertas_inactivas(dias=7)
