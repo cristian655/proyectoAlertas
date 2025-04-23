@@ -51,7 +51,7 @@ def notificar_alerta(tipo_sensor, nombre_estacion, valor, contador, fecha_hora):
         enviar_correo(DESTINATARIOS_POR_DEFECTO, asunto, cuerpo)
 
     elif contador == UMBRAL_ENVIO_REPETICION:
-        cuerpo += f"⏳ La alerta ha persistido durante {UMBRAL_ENVIO_REPETICION} revisiones consecutivas partiendo a las {fecha_hora}"
+        cuerpo += f"⏳ La alerta ha persistido durante {UMBRAL_ENVIO_REPETICION} revisiones consecutivas hasta a las {fecha_hora}"
         enviar_correo(DESTINATARIOS_POR_DEFECTO, asunto, cuerpo)
 
 def probar_envio_correo():
