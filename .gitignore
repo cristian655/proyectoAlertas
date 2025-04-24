@@ -21,3 +21,4 @@ conexion.py
 .DS_Store
 *.swp
 Thumbs.db
+logs/sistema_alertas.log

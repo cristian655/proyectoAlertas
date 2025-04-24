@@ -196,4 +196,4 @@ if __name__ == "__main__":
     logger.info("[FIN] Revision de pozos detenidos y recuperados.")
 
     # 🔽 Limpieza de alertas inactivas
-    limpiar_alertas_inactivas(dias=7)
+    limpiar_alertas_inactivas(dias=0)
