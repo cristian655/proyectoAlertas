@@ -16,7 +16,7 @@ SMTP_PORT = 587
 SMTP_USER = os.getenv("SMTP_USER")
 SMTP_PASS = os.getenv("SMTP_PASS")
 
-DESTINATARIOS_POR_DEFECTO = ["erivas@gpconsultores.cl", "cgonzalez@gpconsultores.cl"]
+DESTINATARIOS_POR_DEFECTO = [ "cgonzalez@gpconsultores.cl"] #,"erivas@gpconsultores.cl"]
 UMBRAL_ENVIO_REPETICION = 3
 
 def enviar_correo(destinatarios, asunto, cuerpo):
@@ -38,6 +38,26 @@ def enviar_correo(destinatarios, asunto, cuerpo):
             logger.info(f"[EMAIL] Correo enviado a {destinatarios}.")
     except Exception as e:
         logger.error(f"[EMAIL] Error al enviar correo: {e}")
+
+def enviar_correo_html(destinatarios, asunto, cuerpo_html):
+    if not ENVIAR_CORREO:
+        logger.info("[EMAIL] Envío de correos deshabilitado por configuración.")
+        return
+
+    msg = MIMEMultipart("alternative")
+    msg["From"] = REMITENTE
+    msg["To"] = ", ".join(destinatarios)
+    msg["Subject"] = asunto
+    msg.attach(MIMEText(cuerpo_html, "html"))
+
+    try:
+        with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as servidor:
+            servidor.starttls()
+            servidor.login(SMTP_USER, SMTP_PASS)
+            servidor.sendmail(REMITENTE, destinatarios, msg.as_string())
+            logger.info(f"[EMAIL] Correo HTML enviado a {destinatarios}.")
+    except Exception as e:
+        logger.error(f"[EMAIL] Error al enviar correo HTML: {e}")
 
 def notificar_alerta(tipo_sensor, nombre_estacion, valor, contador, fecha_hora):
     asunto = "⚠️ Alerta de Umbral Superado"
