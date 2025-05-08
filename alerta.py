@@ -153,6 +153,13 @@ def limpiar_alertas_inactivas(dias: int = 15):
     except Exception as e:
         logger.error(f"[ERROR] Fallo al ejecutar limpieza de alertas inactivas: {e}")
 
+#Función para invocar la vista de estado de alertas
+def obtener_resumen_diario():
+    query = text("SELECT * FROM vista_estado_alertas")  # Ajusta el nombre si es distinto
+    with engine.connect() as conn:
+        df = pd.read_sql(query, conn)
+    return df
+
 
 # ------------------------------------
 # BLOQUE PRINCIPAL
