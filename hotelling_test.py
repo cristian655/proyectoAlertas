@@ -30,7 +30,7 @@ def hotelling_T2_univariado(df, alpha=0.01):
 
 
 if __name__ == "__main__":
-    sensor_id = 123  # ← reemplaza este ID
+    sensor_id = 110  # ← reemplaza este ID
     dias_historial = 30
 
     try:
