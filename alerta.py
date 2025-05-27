@@ -7,6 +7,7 @@ from conexion import engine
 from pozos_detenidos import detectar_pozos_detenidos, resolver_pozos_recuperados
 from logger import logger
 from enviar_correo import notificar_alerta
+from anomalias_modelos import verificar_anomalias_por_modelo
 
 
 def obtener_sensores_con_umbrales():
@@ -201,6 +202,6 @@ if __name__ == "__main__":
     detectar_pozos_detenidos(horas=4)
     resolver_pozos_recuperados()
     logger.info("[FIN] Revision de pozos detenidos y recuperados.")
-
+    verificar_anomalias_por_modelo()
     # 🔽 Limpieza de alertas inactivas
     limpiar_alertas_inactivas(dias=0)
