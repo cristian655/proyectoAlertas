@@ -84,6 +84,13 @@ def verificar_alertas_activas():
             else:
                 logger.info("[VIGENTE] Alerta aun activa para sensor {}".format(sensor_id))
 
+def desactivar_alertas_modelo():
+    try:
+        with engine.begin() as conn:
+            conn.execute(text("CALL marcar_alertas_modelo()"))
+            logger.info("[LIMPIEZA] Alertas tipo modelo (criterio_id=3) desactivadas si no se repitieron.")
+    except Exception as e:
+        logger.error(f"[ERROR] Fallo al desactivar alertas modelo: {e}")
 
 #Función para invocar el procedimiento de limpieza
 def limpiar_alertas_inactivas(dias: int = 15):
@@ -144,5 +151,6 @@ if __name__ == "__main__":
     resolver_pozos_recuperados()
     logger.info("[FIN] Revision de pozos detenidos y recuperados.")
     verificar_anomalias_por_modelo()
+    desactivar_alertas_modelo()
     # 🔽 Limpieza de alertas inactivas
     limpiar_alertas_inactivas(dias=0)
