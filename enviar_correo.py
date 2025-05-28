@@ -75,14 +75,14 @@ def notificar_alerta(tipo_sensor, nombre_estacion, valor, contador, fecha_hora):
         enviar_correo(DESTINATARIOS_POR_DEFECTO, asunto, cuerpo)
 
 def notificar_alerta_modelo(tipo_sensor, nombre_estacion, valor, fecha_hora):
-    asunto = "📡 Anomalía detectada por Modelo IA"
+    asunto = "⚠️ Alerta anomalía detectada por Tendencia"
 
     cuerpo = (
-        f"📡 Se ha detectado una anomalía en el sensor {tipo_sensor} "
-        f"de la estación {nombre_estacion} mediante algoritmos estadísticos.\n\n"
+        f"⚠️ Se ha detectado una anomalía en el sensor {tipo_sensor} "
+        f"de la estación {nombre_estacion} mediante un modelo de análisis de tendencia.\n\n"
         f"Valor detectado: {valor}\n"
         f"Fecha y hora de la medición: {fecha_hora}\n\n"
-        f"⚠️ Esta alerta fue generada por análisis de modelos IA, no por umbrales definidos."
+        f"⚠️ Esta alerta fue generada por análisis de modelos IA."
     )
 
     enviar_correo(DESTINATARIOS_POR_DEFECTO, asunto, cuerpo)
