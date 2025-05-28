@@ -13,12 +13,11 @@ def verificar_anomalias_por_modelo():
 
     with engine.connect() as conn:
         sensores = conn.execute(text("""
-            SELECT s.sensor_id, s.tipo_raw, e.estacion_id
-            FROM Sensores s
-            JOIN Estaciones e ON s.estacion_id = e.estacion_id
-            JOIN ultimo_dato_sensor uds ON s.sensor_id = uds.sensor_id
-            WHERE uds.enable = 1
-        """)).mappings().all()
+            SELECT u.sensor_id, u.estacion_id
+            FROM umbrales u
+            JOIN ultimo_dato_sensor uds ON u.sensor_id = uds.sensor_id
+            WHERE u.usar_modelos = 1 AND u.enable = 1 AND uds.enable = 1
+            """)).mappings().all()
 
     for sensor in sensores:
         sensor_id = sensor["sensor_id"]

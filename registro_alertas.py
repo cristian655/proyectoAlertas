@@ -2,7 +2,7 @@
 from sqlalchemy import text
 from conexion import engine
 from logger import logger
-from enviar_correo import notificar_alerta
+from enviar_correo import notificar_alerta, notificar_alerta_modelo
 
 def registrar_alarma_persistente(sensor_id, estacion_id, fecha_hora, valor, criterio_id=2, observacion=None):
     with engine.begin() as conn:
@@ -47,7 +47,11 @@ def registrar_alarma_persistente(sensor_id, estacion_id, fecha_hora, valor, crit
                 "observacion": observacion
             })
             logger.warning("[ALERTA] Alarma actualizada para sensor {}".format(sensor_id))
-            notificar_alerta(tipo_sensor, nombre_estacion, valor, ultima["contador"] + 1, fecha_hora)
+            if criterio_id == 3:
+                notificar_alerta_modelo(tipo_sensor, nombre_estacion, valor, fecha_hora)
+            else:
+                notificar_alerta(tipo_sensor, nombre_estacion, valor, ultima["contador"] + 1, fecha_hora)
+
 
         else:
             conn.execute(text("""
@@ -65,4 +69,7 @@ def registrar_alarma_persistente(sensor_id, estacion_id, fecha_hora, valor, crit
                 "observacion": observacion
             })
             logger.warning("[ALERTA] Nueva alarma registrada para sensor {}".format(sensor_id))
-            notificar_alerta(tipo_sensor, nombre_estacion, valor, 1, fecha_hora)
+            if criterio_id == 3:
+                notificar_alerta_modelo(tipo_sensor, nombre_estacion, valor, fecha_hora)
+            else:
+                notificar_alerta(tipo_sensor, nombre_estacion, valor, 1, fecha_hora)

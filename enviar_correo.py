@@ -74,6 +74,20 @@ def notificar_alerta(tipo_sensor, nombre_estacion, valor, contador, fecha_hora):
         cuerpo += f"⏳ La alerta ha persistido durante {UMBRAL_ENVIO_REPETICION} revisiones consecutivas hasta a las {fecha_hora}"
         enviar_correo(DESTINATARIOS_POR_DEFECTO, asunto, cuerpo)
 
+def notificar_alerta_modelo(tipo_sensor, nombre_estacion, valor, fecha_hora):
+    asunto = "📡 Anomalía detectada por Modelo IA"
+
+    cuerpo = (
+        f"📡 Se ha detectado una anomalía en el sensor {tipo_sensor} "
+        f"de la estación {nombre_estacion} mediante algoritmos estadísticos.\n\n"
+        f"Valor detectado: {valor}\n"
+        f"Fecha y hora de la medición: {fecha_hora}\n\n"
+        f"⚠️ Esta alerta fue generada por análisis de modelos IA, no por umbrales definidos."
+    )
+
+    enviar_correo(DESTINATARIOS_POR_DEFECTO, asunto, cuerpo)
+
+
 def probar_envio_correo():
     asunto = "📧 Prueba de Envío desde Amazon SES"
     cuerpo = (
