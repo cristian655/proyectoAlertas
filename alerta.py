@@ -9,6 +9,9 @@ from logger import logger
 from enviar_correo import notificar_alerta
 #from anomalias_modelos import verificar_anomalias_por_modelo
 from registro_alertas import registrar_alarma_persistente
+import warnings
+warnings.filterwarnings("ignore", category=UserWarning, module="sklearn")
+
 
 
 def obtener_sensores_con_umbrales():
