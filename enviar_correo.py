@@ -74,18 +74,19 @@ def notificar_alerta(tipo_sensor, nombre_estacion, valor, contador, fecha_hora):
         cuerpo += f"⏳ La alerta ha persistido durante {UMBRAL_ENVIO_REPETICION} revisiones consecutivas hasta a las {fecha_hora}"
         enviar_correo(DESTINATARIOS_POR_DEFECTO, asunto, cuerpo)
 
-def notificar_alerta_modelo(tipo_sensor, nombre_estacion, valor, fecha_hora):
-    asunto = "⚠️ Alerta anomalía detectada por Tendencia"
-
+def notificar_alerta_modelo(nombre_estacion, tipo_sensor, valor, fecha_hora, algoritmos_detectores):
+    asunto = "⚠️ Alerta de anomalía detectada por tendencia"
     cuerpo = (
-        f"⚠️ Se ha detectado una anomalía en el sensor {tipo_sensor} "
-        f"de la estación {nombre_estacion} mediante un modelo de análisis de tendencia.\n\n"
-        f"Valor detectado: {valor}\n"
+        f"Se ha detectado una anomalía en el sensor {tipo_sensor} "
+        f"de la estación {nombre_estacion} mediante algoritmos de detección.\n\n"
+        f" Algoritmos que detectaron la anomalía: {', '.join(algoritmos_detectores)}\n\n"
+        f" Valor detectado: {valor}\n"
         f"Fecha y hora de la medición: {fecha_hora}\n\n"
-        f"⚠️ Esta alerta fue generada por análisis de modelos IA."
+        f"⚠️ Esta alerta fue generada por análisis estadístico/modelos."
     )
 
-    enviar_correo(DESTINATARIOS_POR_DEFECTO, asunto, cuerpo)
+    enviar_correo(["cgonzalez@gpconsultores.cl"], asunto, cuerpo)
+
 
 
 def probar_envio_correo():
