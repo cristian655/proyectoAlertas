@@ -4,7 +4,8 @@ import pandas as pd
 from sqlalchemy import text
 from conexion import engine
 from logger import logger
-from alerta import registrar_alarma_persistente
+#from alerta import registrar_alarma_persistente
+from registro_alertas import registrar_alarma_persistente
 from algoritmos_univariados import hotelling_T2_univariado, isolation_forest, rolling_zscore
 
 def verificar_anomalias_por_modelo():
