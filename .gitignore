@@ -22,3 +22,5 @@ conexion.py
 *.swp
 Thumbs.db
 logs/sistema_alertas.log
+logs/cron_prueba.log
+logs/cron.log

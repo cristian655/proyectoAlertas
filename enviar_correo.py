@@ -10,13 +10,13 @@ load_dotenv()
 
 ENVIAR_CORREO = True
 
-REMITENTE = "erivas@gpconsultores.cl"
-SMTP_SERVER = "email-smtp.us-east-2.amazonaws.com"
+REMITENTE = "info@gptelemetria.cl"
+SMTP_SERVER = "email-smtp.us-east-1.amazonaws.com"
 SMTP_PORT = 587
 SMTP_USER = os.getenv("SMTP_USER")
 SMTP_PASS = os.getenv("SMTP_PASS")
 
-DESTINATARIOS_POR_DEFECTO = [ "cgonzalez@gpconsultores.cl","erivas@gpconsultores.cl"]
+DESTINATARIOS_POR_DEFECTO = [ "cgonzalez@gpconsultores.cl","erivas@gpconsultores.cl","hjilberto@gpconsultores.cl"]
 UMBRAL_ENVIO_REPETICION = 3
 
 def enviar_correo(destinatarios, asunto, cuerpo):
