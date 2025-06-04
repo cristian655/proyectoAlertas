@@ -85,7 +85,7 @@ def notificar_alerta_modelo(nombre_estacion, tipo_sensor, valor, fecha_hora, alg
         f"⚠️ Esta alerta fue generada por análisis estadístico/modelos."
     )
 
-    enviar_correo(["cgonzalez@gpconsultores.cl"], asunto, cuerpo)
+    enviar_correo(DESTINATARIOS_POR_DEFECTO, asunto, cuerpo)
 
 
 

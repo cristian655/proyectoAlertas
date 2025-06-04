@@ -5,7 +5,7 @@ def enviar_resumen_diario():
     df = obtener_resumen_diario()
     
     if df.empty:
-        cuerpo = "<p>No se encontraron datos en la vista de resumen.</p>"
+        cuerpo = "<p>No se encontraron alertas.</p>"
     else:
         cuerpo = f"""
         <html>
@@ -31,13 +31,13 @@ def enviar_resumen_diario():
         </style>
         </head>
         <body>
-        <h3>Resumen Diario del Sistema de Alertas</h3>
+        <h3>Resumen Periódico del Sistema de Alertas</h3>
         {df.to_html(index=False, escape=False)}
         </body>
         </html>
         """
 
-    asunto = "📊 Resumen Diario del Sistema de Alertas"
+    asunto = "📊 Resumen Periódico del Sistema de Alertas"
     enviar_correo_html(DESTINATARIOS_POR_DEFECTO, asunto, cuerpo)
 
 if __name__ == "__main__":
