@@ -1,10 +1,9 @@
-# registro_alertas.py
 from sqlalchemy import text
 from conexion import engine
 from logger import logger
 from enviar_correo import notificar_alerta, notificar_alerta_modelo
 
-def registrar_alarma_persistente(sensor_id, estacion_id, fecha_hora, valor, criterio_id=2, observacion=None):
+def registrar_alarma_persistente(sensor_id, estacion_id, fecha_hora, valor, criterio_id=2, observacion=None, algoritmos_detectores=None):
     with engine.begin() as conn:
         nombre_estacion = conn.execute(text("""
             SELECT nombre FROM Estaciones WHERE estacion_id = :id
@@ -47,11 +46,13 @@ def registrar_alarma_persistente(sensor_id, estacion_id, fecha_hora, valor, crit
                 "observacion": observacion
             })
             logger.warning("[ALERTA] Alarma actualizada para sensor {}".format(sensor_id))
+
             if criterio_id == 3:
-                notificar_alerta_modelo(tipo_sensor, nombre_estacion, valor, fecha_hora)
+                if not algoritmos_detectores:
+                    algoritmos_detectores = ["Algoritmos no supervisados"]
+                notificar_alerta_modelo(nombre_estacion, tipo_sensor, valor, fecha_hora, algoritmos_detectores)
             else:
                 notificar_alerta(tipo_sensor, nombre_estacion, valor, ultima["contador"] + 1, fecha_hora)
-
 
         else:
             conn.execute(text("""
@@ -69,7 +70,10 @@ def registrar_alarma_persistente(sensor_id, estacion_id, fecha_hora, valor, crit
                 "observacion": observacion
             })
             logger.warning("[ALERTA] Nueva alarma registrada para sensor {}".format(sensor_id))
+
             if criterio_id == 3:
-                notificar_alerta_modelo(tipo_sensor, nombre_estacion, valor, fecha_hora)
+                if not algoritmos_detectores:
+                    algoritmos_detectores = ["Desconocido"]
+                notificar_alerta_modelo(nombre_estacion, tipo_sensor, valor, fecha_hora, algoritmos_detectores)
             else:
                 notificar_alerta(tipo_sensor, nombre_estacion, valor, 1, fecha_hora)
