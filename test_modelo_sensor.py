@@ -77,3 +77,4 @@ if __name__ == "__main__":
 
     print("\n--- Resultados de sensores con anomalías ---")
     print(resultados[resultados[["Hotelling_T2", "Isolation_Forest", "Rolling_ZScore"]].any(axis=1)])
+
