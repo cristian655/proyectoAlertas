@@ -48,9 +48,10 @@ def registrar_alarma_persistente(sensor_id, estacion_id, fecha_hora, valor, crit
             logger.warning("[ALERTA] Alarma actualizada para sensor {}".format(sensor_id))
 
             if criterio_id == 3:
-                if not algoritmos_detectores:
-                    algoritmos_detectores = ["Algoritmos no supervisados"]
-                notificar_alerta_modelo(nombre_estacion, tipo_sensor, valor, fecha_hora, algoritmos_detectores)
+                 logger.info(f"[MODELO] Alarma registrada (sin correo) para {nombre_estacion} - {tipo_sensor} con valor {valor}")                    
+#                if not algoritmos_detectores:
+#                    algoritmos_detectores = ["Algoritmos no supervisados"]
+#                notificar_alerta_modelo(nombre_estacion, tipo_sensor, valor, fecha_hora, algoritmos_detectores)
             else:
                 notificar_alerta(tipo_sensor, nombre_estacion, valor, ultima["contador"] + 1, fecha_hora)
 
