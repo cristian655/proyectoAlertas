@@ -18,7 +18,7 @@ def probar_anomalias_por_sensor(sensor_id, dias=30):
     with engine.connect() as conn:
         meta = conn.execute(query_meta, {"sensor_id": sensor_id}).mappings().fetchone()
         if not meta:
-            print(f"[ERROR] Sensor {sensor_id} no encontrado.")
+            print("[ERROR] Sensor {} no encontrado.".format(sensor_id))
             return
 
         estacion_id = meta["estacion_id"]
@@ -33,11 +33,12 @@ def probar_anomalias_por_sensor(sensor_id, dias=30):
         """), conn, params={"sensor_id": sensor_id, "dias": dias})
 
     if df.empty or len(df) < 24:
-        print(f"[ADVERTENCIA] Sensor {sensor_id} sin suficientes datos.")
+        print("[ADVERTENCIA] Sensor {} sin suficientes datos.".format(sensor_id))
         return
 
-    print(f"\n--- Análisis para el sensor {sensor_id} ({tipo_sensor}) en estación '{nombre_estacion}' ---")
-    print(f"Último valor: {df.iloc[-1]['valor']} a las {df.iloc[-1]['fecha_hora']}")
+    print("\n--- Análisis para el sensor {} ({}) en estación '{}' ---".format(
+        sensor_id, tipo_sensor, nombre_estacion))
+    print("Último valor: {} a las {}".format(df.iloc[-1]['valor'], df.iloc[-1]['fecha_hora']))
 
     try:
         r1 = hotelling_T2_univariado(df)
@@ -49,11 +50,11 @@ def probar_anomalias_por_sensor(sensor_id, dias=30):
         a3 = r3["anomalía"].iloc[-1]
 
         print("\nResultados de los modelos:")
-        print(f"- Hotelling T2        : {'Anomalía' if a1 else 'Normal'}")
-        print(f"- Isolation Forest    : {'Anomalía' if a2 else 'Normal'}")
-        print(f"- Rolling Z-Score     : {'Anomalía' if a3 else 'Normal'}")
+        print("- Hotelling T2        : {}".format("Anomalía" if a1 else "Normal"))
+        print("- Isolation Forest    : {}".format("Anomalía" if a2 else "Normal"))
+        print("- Rolling Z-Score     : {}".format("Anomalía" if a3 else "Normal"))
 
-        if any([a1, a2, a3]):
+        if a1 or a2 or a3:
             fecha_alerta = df["fecha_hora"].iloc[-1]
             valor = df["valor"].iloc[-1]
             algoritmos = []
@@ -64,14 +65,14 @@ def probar_anomalias_por_sensor(sensor_id, dias=30):
             observacion = "Anomalía detectada por: " + ", ".join(algoritmos)
 
             print("\n[ALERTA] Se generaría una alerta con los siguientes datos:")
-            print(f"- Fecha/Hora: {fecha_alerta}")
-            print(f"- Valor     : {valor}")
-            print(f"- Algoritmos: {', '.join(algoritmos)}")
+            print("- Fecha/Hora: {}".format(fecha_alerta))
+            print("- Valor     : {}".format(valor))
+            print("- Algoritmos: {}".format(", ".join(algoritmos)))
         else:
             print("\n[OK] Ninguna anomalía detectada en el último dato.")
 
     except Exception as e:
-        print(f"[ERROR] Fallo al ejecutar el análisis: {e}")
+        print("[ERROR] Fallo al ejecutar el análisis: {}".format(e))
 
 # Uso
 if __name__ == "__main__":
