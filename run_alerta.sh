@@ -1,6 +1,6 @@
 #!/bin/bash
-echo "=== CRON EJECUTADO $(date) ===" >> /home/ec2-user/alertas/logs/cron.log
+echo "=== CRON EJECUTADO $(date) ===" >> /home/ubuntu/proyectoAlertas/logs/cron.log
 # Activar entorno virtual
-source /home/ec2-user/alertas/venv/bin/activate
+source /home/ubuntu/proyectoAlertas/venv/bin/activate
 # Ejecutar script con Python del entorno
-python /home/ec2-user/alertas/alerta.py >> /home/ec2-user/alertas/logs/cron.log 2>&1
+python /home/ubuntu/proyectoAlertas/alerta.py >> /home/ubuntu/proyectoAlertas/logs/cron.log 2>&1

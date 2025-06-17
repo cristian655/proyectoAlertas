@@ -1,4 +1,4 @@
 #!/bin/bash
-cd /home/ec2-user/alertas
+cd /home/ubuntu/proyectoAlertas
 source venv/bin/activate
 python resumen_diario.py
