@@ -69,13 +69,7 @@ def verificar_anomalias_por_modelo():
                     observacion=observacion
                 )
 
-                notificar_alerta_modelo(
-                    nombre_estacion=nombre_estacion,
-                    tipo_sensor=tipo_sensor,
-                    valor=valor,
-                    fecha_hora=fecha_hora,
-                    algoritmos_detectores=algoritmos_detectores
-                )
+                #notificar_alerta_modelo(nombre_estacion=nombre_estacion,tipo_sensor=tipo_sensor,valor=valor,fecha_hora=fecha_hora,algoritmos_detectores=algoritmos_detectores)
             else:
                 logger.info(f"[OK] Sensor {sensor_id} sin anomalía según modelos.")
 
