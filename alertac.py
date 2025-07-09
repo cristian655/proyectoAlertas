@@ -108,7 +108,9 @@ def obtener_resumen_diario():
 
 if __name__ == "__main__":
     from anomalias_modelosc import verificar_anomalias_por_modelo
-    logger.info("[INICIO] Revision de sensores con umbrales...")
+    from decimal import Decimal, InvalidOperation
+
+    logger.info("[INICIO] Revisión de sensores con umbrales...")
 
     sensores = obtener_sensores_con_umbrales()
 
@@ -123,26 +125,41 @@ if __name__ == "__main__":
         fecha, valor = obtener_ultima_lectura(sensor_id, estacion_id)
 
         if fecha is None:
-            logger.info("[INFO] Sin lectura para sensor {}".format(sensor_id))
+            logger.info(f"[INFO] Sin lectura para sensor {sensor_id} ({nombre_estacion})")
             continue
 
-        if (limite_inf is not None and valor < limite_inf) or (limite_sup is not None and valor > limite_sup):
-            mensaje = "Valor fuera de umbral en {} ({}): {} (umbral: {} - {})".format(
-                nombre_estacion, tipo, valor, limite_inf, limite_sup
+        try:
+            valor_decimal = Decimal(valor)
+            limite_inf_decimal = Decimal(limite_inf) if limite_inf is not None else None
+            limite_sup_decimal = Decimal(limite_sup) if limite_sup is not None else None
+
+            if (limite_inf_decimal is not None and valor_decimal < limite_inf_decimal) or \
+               (limite_sup_decimal is not None and valor_decimal > limite_sup_decimal):
+                mensaje = (
+                    f"Valor fuera de umbral en {nombre_estacion} ({tipo}): "
+                    f"{valor} (umbral: {limite_inf} - {limite_sup})"
+                )
+                registrar_alarma_persistente(sensor_id, estacion_id, fecha, valor, observacion=mensaje)
+            else:
+                logger.info(f"[OK] Sensor {sensor_id} dentro de rango.")
+        except InvalidOperation as e:
+            logger.error(
+                f"[ERROR] Conversión fallida para sensor {sensor_id} ({nombre_estacion}) → "
+                f"valor={valor}, inf={limite_inf}, sup={limite_sup} → {e}"
             )
-            registrar_alarma_persistente(sensor_id, estacion_id, fecha, valor, observacion=mensaje)
-        else:
-            logger.info("[OK] Sensor {} dentro de rango.".format(sensor_id))
+            continue
 
-    logger.info("[FIN] Revision de nuevos datos finalizada.\n")
+    logger.info("[FIN] Revisión de nuevos datos finalizada.")
 
+    # Verificación y limpieza de alertas
     verificar_alertas_activas()
-    logger.info("[FIN] Verificacion de alertas activas finalizada.")
+    logger.info("[FIN] Verificación de alertas activas finalizada.")
 
-    logger.info("[INICIO] Revision de pozos detenidos...")
+    logger.info("[INICIO] Revisión de pozos detenidos...")
     detectar_pozos_detenidos(horas=4)
     resolver_pozos_recuperados()
-    logger.info("[FIN] Revision de pozos detenidos y recuperados.")
+    logger.info("[FIN] Revisión de pozos detenidos y recuperados.")
+
     verificar_anomalias_por_modelo()
     desactivar_alertas_modelo()
     limpiar_alertas_inactivas(dias=0)
