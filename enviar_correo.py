@@ -98,6 +98,46 @@ def probar_envio_correo():
     )
     enviar_correo(DESTINATARIOS_POR_DEFECTO, asunto, cuerpo)
 
+from email.mime.image import MIMEImage
+
+def enviar_correo_html_con_logo(destinatarios, asunto, cuerpo_html, path_logo):
+    if not ENVIAR_CORREO:
+        logger.info("[EMAIL] Envío de correos deshabilitado por configuración.")
+        return
+
+    msg = MIMEMultipart("related")
+    msg["From"] = REMITENTE
+    msg["To"] = ", ".join(destinatarios)
+    msg["Subject"] = asunto
+
+    msg_alt = MIMEMultipart("alternative")
+    msg.attach(msg_alt)
+
+    # Insertar logo en HTML
+    html_con_logo = f"""
+    <html>
+    <body style="font-family: Arial, sans-serif; text-align: center;">
+        <img src="cid:logo_gp" alt="GP Consultores" style="max-width: 200px; margin-bottom: 20px;" />
+        {cuerpo_html}
+    </body>
+    </html>
+    """
+
+    msg_alt.attach(MIMEText(html_con_logo, "html"))
+
+    try:
+        with open(path_logo, "rb") as f:
+            logo = MIMEImage(f.read())
+            logo.add_header("Content-ID", "<logo_gp>")
+            msg.attach(logo)
+
+        with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as servidor:
+            servidor.starttls()
+            servidor.login(SMTP_USER, SMTP_PASS)
+            servidor.sendmail(REMITENTE, destinatarios, msg.as_string())
+            logger.info(f"[EMAIL] Correo HTML con logo enviado a {destinatarios}.")
+    except Exception as e:
+        logger.error(f"[EMAIL] Error al enviar correo con logo: {e}")
 
 # Ejecutar prueba directa si se corre este script
 if __name__ == "__main__":
