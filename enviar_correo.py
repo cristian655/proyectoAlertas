@@ -1,5 +1,6 @@
 # enviar_correo.py
 import os
+from datetime import datetime
 from dotenv import load_dotenv
 import smtplib
 from email.mime.text import MIMEText
@@ -17,6 +18,7 @@ SMTP_USER = os.getenv("SMTP_USER")
 SMTP_PASS = os.getenv("SMTP_PASS")
 
 DESTINATARIOS_POR_DEFECTO = [ "cgonzalez@gpconsultores.cl","erivas@gpconsultores.cl","hjilberto@gpconsultores.cl"]
+DESTINATARIOS_VICTOR = [ "cgonzalez@gpconsultores.cl","erivas@gpconsultores.cl","hjilberto@gpconsultores.cl"]
 UMBRAL_ENVIO_REPETICION = 3
 
 def enviar_correo(destinatarios, asunto, cuerpo):
@@ -61,18 +63,22 @@ def enviar_correo_html(destinatarios, asunto, cuerpo_html):
 
 def notificar_alerta(tipo_sensor, nombre_estacion, valor, contador, fecha_hora):
     asunto = "⚠️ Alerta de Umbral Superado"
-    cuerpo = (
-        f"Se ha detectado un valor fuera de rango en el sensor {tipo_sensor} "
-        f"de la estación {nombre_estacion}. Valor: {valor}.\n\n"
-    )
+
+    cuerpo_html = f"""
+    <h3>⚠️ Alerta en el sensor {tipo_sensor}</h3>
+    <p>Estación: <strong>{nombre_estacion}</strong></p>
+    <p>Valor medido: <strong>{valor}</strong></p>
+    """
 
     if contador == 1:
-        cuerpo += f"⚠️ Esta es la primera vez que se detecta esta alerta. 🕒 ({fecha_hora})"
-        enviar_correo(DESTINATARIOS_POR_DEFECTO, asunto, cuerpo)
-
+        cuerpo_html += f"<p>🔔 Primera detección de la alerta.<br><strong>{fecha_hora}</strong></p>"
     elif contador == UMBRAL_ENVIO_REPETICION:
-        cuerpo += f"⏳ La alerta ha persistido durante {UMBRAL_ENVIO_REPETICION} revisiones consecutivas hasta a las {fecha_hora}"
-        enviar_correo(DESTINATARIOS_POR_DEFECTO, asunto, cuerpo)
+        cuerpo_html += f"<p>⏳ La alerta ha persistido durante {UMBRAL_ENVIO_REPETICION} revisiones consecutivas.<br><strong>{fecha_hora}</strong></p>"
+    else:
+        return  # No enviar si no es ni la primera ni el umbral de repetición
+
+    enviar_correo_html_con_logo(DESTINATARIOS_VICTOR, asunto, cuerpo_html, "gp-fullcolor-centrado.png")
+
 
 def notificar_alerta_modelo(nombre_estacion, tipo_sensor, valor, fecha_hora, algoritmos_detectores):
     asunto = "⚠️ Alerta de anomalía detectada por tendencia"
@@ -105,6 +111,14 @@ def enviar_correo_html_con_logo(destinatarios, asunto, cuerpo_html, path_logo):
         logger.info("[EMAIL] Envío de correos deshabilitado por configuración.")
         return
 
+    if not SMTP_USER or not SMTP_PASS:
+        logger.error("[EMAIL] Credenciales SMTP no cargadas correctamente (SMTP_USER o SMTP_PASS vacío).")
+        return
+
+    if not os.path.exists(path_logo):
+        logger.error(f"[EMAIL] No se encontró el archivo de logo en la ruta: {path_logo}")
+        return
+
     msg = MIMEMultipart("related")
     msg["From"] = REMITENTE
     msg["To"] = ", ".join(destinatarios)
@@ -113,7 +127,7 @@ def enviar_correo_html_con_logo(destinatarios, asunto, cuerpo_html, path_logo):
     msg_alt = MIMEMultipart("alternative")
     msg.attach(msg_alt)
 
-    # Insertar logo en HTML
+    # HTML embebido con logo
     html_con_logo = f"""
     <html>
     <body style="font-family: Arial, sans-serif; text-align: center;">
@@ -140,5 +154,13 @@ def enviar_correo_html_con_logo(destinatarios, asunto, cuerpo_html, path_logo):
         logger.error(f"[EMAIL] Error al enviar correo con logo: {e}")
 
 # Ejecutar prueba directa si se corre este script
+def probar_alerta_umbral_con_logo():
+    tipo_sensor = "pH"
+    nombre_estacion = "CRW-01"
+    valor = 9.8
+    contador = 1
+    fecha_hora = datetime.now().strftime("%d-%m-%Y %H:%M")
+    notificar_alerta(tipo_sensor, nombre_estacion, valor, contador, fecha_hora)
+
 if __name__ == "__main__":
-    probar_envio_correo()
+     probar_alerta_umbral_con_logo()
