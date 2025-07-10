@@ -57,7 +57,7 @@ def conectar_bd(base):
 def obtener_alertas_no_notificadas(conn, tabla):
     with conn.cursor() as cursor:
         cursor.execute(f'''
-            SELECT id, estacion_id, sensor_id, criterio_id, valor, fecha_hora
+            SELECT alerta_id, estacion_id, sensor_id, criterio_id, valor, fecha_hora
             FROM {tabla}
             WHERE criterio_id IN (1, 2)
               AND notificado = 0
@@ -94,7 +94,7 @@ def marcar_alertas_como_notificadas(conn, tabla, ids):
         cursor.execute(f'''
             UPDATE {tabla}
             SET notificado = 1
-            WHERE id IN ({ids_str})
+            WHERE alerta_id IN ({ids_str})
         ''')
         conn.commit()
 
@@ -119,7 +119,7 @@ def main():
         enviar_correo_html_con_logo(DESTINATARIOS, asunto, html, "gp-fullcolor-centrado.png")
 
         for conn, base, tabla in [(c[0], c[1], c[2]) for c in conexiones]:
-            ids = [a[3]['id'] for a in todas_alertas if a[0] == base and a[1] == tabla]
+            ids = [a[3]['alerta_id'] for a in todas_alertas if a[0] == base and a[1] == tabla]
             marcar_alertas_como_notificadas(conn, tabla, ids)
 
     except Exception as e:
