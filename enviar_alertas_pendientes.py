@@ -57,14 +57,17 @@ def conectar_bd(base):
 def obtener_alertas_no_notificadas(conn, tabla):
     with conn.cursor() as cursor:
         cursor.execute(f'''
-            SELECT alerta_id, estacion_id, sensor_id, criterio_id, valor, fecha_hora
+            SELECT alerta_id AS id, estacion_id, sensor_id, criterio_id, valor, timestamp AS fecha_hora
             FROM {tabla}
             WHERE criterio_id IN (1, 2)
               AND notificado = 0
               AND enable = 1
-            ORDER BY fecha_hora DESC
+            ORDER BY timestamp DESC
         ''')
-        return cursor.fetchall()
+        alertas = cursor.fetchall()
+        for alerta in alertas:
+            logger.info(f"[DEBUG] Alerta encontrada: {alerta}")
+        return alertas
 
 def construir_tabla_html(alertas):
     filas = ""
@@ -88,15 +91,17 @@ def construir_tabla_html(alertas):
 
 def marcar_alertas_como_notificadas(conn, tabla, ids):
     if not ids:
+        logger.info("[AVISO] No hay alertas para marcar como notificadas.")
         return
     ids_str = ",".join(str(i) for i in ids)
     with conn.cursor() as cursor:
         cursor.execute(f'''
             UPDATE {tabla}
             SET notificado = 1
-            WHERE alerta_id IN ({ids_str})
+            WHERE id IN ({ids_str})
         ''')
         conn.commit()
+        logger.info(f"[BD] {len(ids)} alertas marcadas como notificadas en {tabla}")
 
 def main():
     todas_alertas = []
@@ -104,6 +109,7 @@ def main():
 
     try:
         for base, tabla in TABLAS_Y_BASES:
+            logger.info(f"[INFO] Revisando base: {base}, tabla: {tabla}")
             conn = conectar_bd(base)
             conexiones.append((conn, base, tabla))
             alertas = obtener_alertas_no_notificadas(conn, tabla)
@@ -116,17 +122,20 @@ def main():
 
         html = construir_tabla_html([a[3] for a in todas_alertas])
         asunto = f"{len(todas_alertas)} nuevas alertas generadas ({datetime.now().strftime('%d-%m-%Y %H:%M')})"
+        logger.info(f"[EMAIL] Enviando correo a: {DESTINATARIOS}")
         enviar_correo_html_con_logo(DESTINATARIOS, asunto, html, "gp-fullcolor-centrado.png")
+        logger.info("[EMAIL] Correo enviado correctamente")
 
         for conn, base, tabla in [(c[0], c[1], c[2]) for c in conexiones]:
-            ids = [a[3]['alerta_id'] for a in todas_alertas if a[0] == base and a[1] == tabla]
+            ids = [a[3]['id'] for a in todas_alertas if a[0] == base and a[1] == tabla]
             marcar_alertas_como_notificadas(conn, tabla, ids)
 
     except Exception as e:
-        logger.error(f"[ALERTAS] Error general: {e}")
+        logger.error(f"[ERROR GENERAL] {e}")
     finally:
         for conn, _, _ in conexiones:
             conn.close()
+        logger.info("[INFO] Conexiones cerradas.")
 
 if __name__ == "__main__":
     main()
