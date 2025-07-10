@@ -18,7 +18,7 @@ SMTP_USER = os.getenv("SMTP_USER")
 SMTP_PASS = os.getenv("SMTP_PASS")
 
 DESTINATARIOS_POR_DEFECTO = [ "cgonzalez@gpconsultores.cl","erivas@gpconsultores.cl","hjilberto@gpconsultores.cl"]
-DESTINATARIOS_VICTOR = [ "cgonzalez@gpconsultores.cl"]#,"erivas@gpconsultores.cl","hjilberto@gpconsultores.cl"]
+DESTINATARIOS_VICTOR = [ "cgonzalez@gpconsultores.cl","erivas@gpconsultores.cl","hjilberto@gpconsultores.cl"]
 UMBRAL_ENVIO_REPETICION = 3
 
 def enviar_correo(destinatarios, asunto, cuerpo):
