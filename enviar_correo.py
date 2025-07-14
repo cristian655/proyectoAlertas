@@ -106,8 +106,6 @@ def probar_envio_correo():
 
 from email.mime.image import MIMEImage
 
-from email.mime.image import MIMEImage
-
 def enviar_correo_html_con_logo(destinatarios, asunto, cuerpo_html, path_logo):
     if not ENVIAR_CORREO:
         logger.info("[EMAIL] Envío de correos deshabilitado por configuración.")
@@ -133,13 +131,15 @@ def enviar_correo_html_con_logo(destinatarios, asunto, cuerpo_html, path_logo):
     <html>
       <body style="font-family: 'Segoe UI', Roboto, Arial, sans-serif; background-color: #f4f6f8; padding: 30px; color: #333;">
         <div style="max-width: 600px; margin: auto; background: #ffffff; padding: 25px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
-          
-          <div style="text-align: center; margin-bottom: 25px;">
-            <img src="cid:logo_gp" alt="GP Consultores" style="max-width: 180px; margin-bottom: 10px;" />
-            <h2 style="color: #005b5e; margin: 10px 0;">Alerta del Sistema de Monitoreo</h2>
-            <p style="font-size: 14px; color: #666;">
-              Se ha detectado una condición fuera de rango. A continuación se detallan los valores registrados:
-            </p>
+
+          <div style="display: flex; align-items: center; justify-content: flex-start; margin-bottom: 25px;">
+            <img src="cid:logo_gp" alt="GP Consultores" style="max-width: 100px; margin-right: 20px;" />
+            <div>
+              <h2 style="color: #018ae4; margin: 0;">Alerta del Sistema de Monitoreo</h2>
+              <p style="font-size: 14px; color: #666; margin: 5px 0 0;">
+                Se ha detectado una condición fuera de rango. A continuación se detallan los valores registrados:
+              </p>
+            </div>
           </div>
 
           {cuerpo_html}
