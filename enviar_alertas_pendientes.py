@@ -22,10 +22,6 @@ TABLAS_Y_BASES = [
     ("GP-MLP-Contac", "alertas")
 ]
 
-# MODO_ENVIO:
-# 1 = solo oficina
-# 2 = solo cliente
-# 3 = todos
 MODO_ENVIO = int(os.getenv("MODO_ENVIO", 1))
 
 DESTINATARIOS_OFICINA = [
@@ -53,26 +49,29 @@ def conectar_bd(base):
         cursorclass=pymysql.cursors.DictCursor
     )
 
-def obtener_nombre_estacion(conn, estacion_id):
+def obtener_nombre_estacion(conn, base, estacion_id):
+    tabla = "Estaciones" if base == "GP-MLP-Telemtry" else "estaciones"
+    campo = "nombre"
     try:
         with conn.cursor() as cursor:
-            cursor.execute("SELECT nombre FROM estaciones WHERE estacion_id = %s", (estacion_id,))
+            cursor.execute(f"SELECT {campo} FROM {tabla} WHERE estacion_id = %s", (estacion_id,))
             resultado = cursor.fetchone()
-            return resultado["nombre"] if resultado else f"ID {estacion_id}"
+            return resultado[campo] if resultado else f"ID {estacion_id}"
     except Exception as e:
-        logger.error(f"[ERROR] al obtener nombre estación {estacion_id}: {e}")
+        logger.error(f"[ERROR] al obtener nombre estación {estacion_id} en {base}: {e}")
         return f"ID {estacion_id}"
 
-def obtener_tipo_sensor(conn, sensor_id):
+def obtener_tipo_sensor(conn, base, sensor_id):
+    tabla = "Sensores" if base == "GP-MLP-Telemtry" else "sensores"
+    campo = "tipo"
     try:
         with conn.cursor() as cursor:
-            cursor.execute("SELECT descripcion FROM sensores WHERE sensor_id = %s", (sensor_id,))
+            cursor.execute(f"SELECT {campo} FROM {tabla} WHERE sensor_id = %s", (sensor_id,))
             resultado = cursor.fetchone()
-            return resultado["descripcion"] if resultado else f"ID {sensor_id}"
+            return resultado[campo] if resultado and resultado[campo] else f"ID {sensor_id}"
     except Exception as e:
-        logger.error(f"[ERROR] al obtener tipo sensor {sensor_id}: {e}")
+        logger.error(f"[ERROR] al obtener tipo sensor {sensor_id} en {base}: {e}")
         return f"ID {sensor_id}"
-
 
 def obtener_alertas_no_notificadas(conn, tabla, base):
     with conn.cursor() as cursor:
@@ -81,7 +80,7 @@ def obtener_alertas_no_notificadas(conn, tabla, base):
         tabla_real = "Alertas" if base == "GP-MLP-Telemtry" else "alertas"
 
         cursor.execute(f'''
-            SELECT {campo_id}, estacion_id, sensor_id, criterio_id, valor, {campo_fecha} AS fecha_hora
+            SELECT {campo_id}, estacion_id, sensor_id, criterio_id, valor, observacion, {campo_fecha} AS fecha_hora
             FROM {tabla_real}
             WHERE criterio_id IN (1, 2)
               AND notificado = 0
@@ -98,28 +97,28 @@ def construir_tabla_html(alertas_con_conns):
     for base, _, conn, a in alertas_con_conns:
         try:
             tipo = "Umbral" if a["criterio_id"] == 1 else "Detención"
-            nombre_estacion = obtener_nombre_estacion(conn, a["estacion_id"])
-            tipo_sensor = obtener_tipo_sensor(conn, a["sensor_id"])
+            nombre_estacion = obtener_nombre_estacion(conn, base, a["estacion_id"])
+            tipo_sensor = obtener_tipo_sensor(conn, base, a["sensor_id"])
+            observacion = a.get("observacion", "-")
         except Exception as e:
-            logger.error(f"[LOOKUP ERROR] {base} - Estación {a['estacion_id']}, Sensor {a['sensor_id']}: {e}")
+            logger.error(f"[ERROR] Falló lookup en {base} para alerta {a['alerta_id']}: {e}")
             nombre_estacion = f"ID {a['estacion_id']}"
             tipo_sensor = f"ID {a['sensor_id']}"
+            observacion = "Error"
 
-        filas += f"<tr><td>{a['fecha_hora']}</td><td>{nombre_estacion}</td><td>{tipo_sensor}</td><td>{a['valor']}</td><td>{tipo}</td></tr>"
+        filas += f"<tr><td>{a['fecha_hora']}</td><td>{nombre_estacion}</td><td>{tipo_sensor}</td><td>{a['valor']}</td><td>{tipo}</td><td>{observacion}</td></tr>"
 
     html = f"""
     <h3>Alertas Detectadas</h3>
     <table border="1" cellspacing="0" cellpadding="4" style="border-collapse: collapse; width: 100%;">
         <tr style="background-color: #005b5e; color: white;">
-            <th>Fecha</th><th>Estación</th><th>Sensor</th><th>Valor</th><th>Tipo</th>
+            <th>Fecha</th><th>Estación</th><th>Sensor</th><th>Valor</th><th>Tipo</th><th>Observación</th>
         </tr>
         {filas}
     </table>
     <p style="font-size: 14px;">Revisar el sistema para más detalles.</p>
     """
     return html
-
-
 
 def marcar_alertas_como_notificadas(conn, tabla, base, ids):
     if not ids:
@@ -164,7 +163,6 @@ def main():
             print("[ALERTAS] No se encontraron alertas pendientes.")
             return
 
-        # Usamos la primera conexión para construir la tabla HTML (las otras pueden venir de esquemas distintos)
         html = construir_tabla_html(todas_alertas)
         asunto = f"{len(todas_alertas)} nuevas alertas generadas ({datetime.now().strftime('%d-%m-%Y %H:%M')})"
         print("[ENVÍO] Enviando correo...")
