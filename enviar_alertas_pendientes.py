@@ -101,7 +101,16 @@ def construir_tabla_html(alertas_con_conns):
     filas = ""
     for base, _, conn, a in alertas_con_conns:
         try:
-            tipo = "Umbral" if a["criterio_id"] == 1 else "Detención"
+            criterio = a["criterio_id"]
+            if criterio == 1:
+                tipo = "Falla comunicación"
+            elif criterio == 2:
+                tipo = "Umbral"
+            elif criterio == 3:
+                tipo = "Tendencia"
+            else:
+                tipo = f"ID {criterio}"
+
             nombre_estacion = obtener_nombre_estacion(conn, base, a["estacion_id"])
             tipo_sensor = obtener_tipo_sensor(conn, base, a["sensor_id"])
             observacion = a.get("observacion", "-")
@@ -124,6 +133,7 @@ def construir_tabla_html(alertas_con_conns):
     <p style="font-size: 14px;">Revisar el sistema para más detalles.</p>
     """
     return html
+
 
 def marcar_alertas_como_notificadas(conn, tabla, base, ids):
     if not ids:
