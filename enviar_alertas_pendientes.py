@@ -125,7 +125,7 @@ def construir_tabla_html(alertas_con_conns):
     html = f"""
     <h3>Alertas Detectadas</h3>
     <table border="1" cellspacing="0" cellpadding="4" style="border-collapse: collapse; width: 100%;">
-        <tr style="background-color: #005b5e; color: white;">
+        <tr style="background-color: #169130; color: white;">
             <th>Fecha</th><th>Estación</th><th>Sensor</th><th>Valor</th><th>Tipo</th><th>Observación</th>
         </tr>
         {filas}

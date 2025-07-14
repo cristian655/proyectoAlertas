@@ -134,12 +134,7 @@ def enviar_correo_html_con_logo(destinatarios, asunto, cuerpo_html, path_logo):
 
           <div style="display: flex; align-items: center; justify-content: flex-start; margin-bottom: 25px;">
             <img src="cid:logo_gp" alt="GP Consultores" style="max-width: 100px; margin-right: 20px;" />
-            <div>
-              <h2 style="color: #018ae4; margin: 0;">Alerta del Sistema de Monitoreo</h2>
-              <p style="font-size: 14px; color: #666; margin: 5px 0 0;">
-                Se ha detectado una condición fuera de rango. A continuación se detallan los valores registrados:
-              </p>
-            </div>
+            <h2 style="color: #018ae4; margin: 0;">Alerta del Sistema de Monitoreo</h2>
           </div>
 
           {cuerpo_html}
