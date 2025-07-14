@@ -53,18 +53,6 @@ def conectar_bd(base):
         cursorclass=pymysql.cursors.DictCursor
     )
 
-def obtener_nombre_estacion(conn, estacion_id):
-    with conn.cursor() as cursor:
-        cursor.execute("SELECT nombre FROM estaciones WHERE estacion_id = %s", (estacion_id,))
-        resultado = cursor.fetchone()
-        return resultado["nombre"] if resultado else f"ID {estacion_id}"
-
-def obtener_tipo_sensor(conn, sensor_id):
-    with conn.cursor() as cursor:
-        cursor.execute("SELECT descripcion FROM sensores WHERE sensor_id = %s", (sensor_id,))
-        resultado = cursor.fetchone()
-        return resultado["descripcion"] if resultado else f"ID {sensor_id}"
-
 def obtener_alertas_no_notificadas(conn, tabla, base):
     with conn.cursor() as cursor:
         campo_id = "alerta_id"
@@ -84,23 +72,23 @@ def obtener_alertas_no_notificadas(conn, tabla, base):
             logger.info(f"[DEBUG] Alerta encontrada en {base}: {alerta}")
         return alertas
 
-def construir_tabla_html(alertas, conn):
+def construir_tabla_html(alertas):
     filas = ""
     for a in alertas:
         tipo = "Umbral" if a["criterio_id"] == 1 else "Detención"
-        nombre_estacion = obtener_nombre_estacion(conn, a["estacion_id"])
-        tipo_sensor = obtener_tipo_sensor(conn, a["sensor_id"])
-        filas += f"<tr><td>{a['fecha_hora']}</td><td>{nombre_estacion}</td><td>{tipo_sensor}</td><td>{a['valor']}</td><td>{tipo}</td></tr>"
+        filas += f"<tr><td>{a['fecha_hora']}</td><td>{a['estacion_id']}</td><td>{a['sensor_id']}</td><td>{a['valor']}</td><td>{tipo}</td></tr>"
 
     html = f"""
-    <h3>Alertas Detectadas</h3>
-    <table border="1" cellspacing="0" cellpadding="4" style="border-collapse: collapse; width: 100%;">
-        <tr style="background-color: #005b5e; color: white;">
-            <th>Fecha</th><th>Estación</th><th>Sensor</th><th>Valor</th><th>Tipo</th>
-        </tr>
-        {filas}
-    </table>
-    <p style="font-size: 14px;">Revisar el sistema para más detalles.</p>
+    <html>
+    <body>
+        <h3>Alertas Detectadas</h3>
+        <table border="1" cellspacing="0" cellpadding="4">
+            <tr><th>Fecha</th><th>Estación</th><th>Sensor</th><th>Valor</th><th>Tipo</th></tr>
+            {filas}
+        </table>
+        <p>Revisar el sistema para más detalles.</p>
+    </body>
+    </html>
     """
     return html
 
@@ -121,6 +109,7 @@ def main():
     todas_alertas = []
     conexiones = []
 
+    # Verificaciones previas
     print(f"SMTP_USER: {SMTP_USER}")
     print(f"SMTP_PASS: {'CARGADO' if SMTP_PASS else 'NO CARGADO'}")
     if not SMTP_USER or not SMTP_PASS:
@@ -147,8 +136,7 @@ def main():
             print("[ALERTAS] No se encontraron alertas pendientes.")
             return
 
-        # Usamos la primera conexión para construir la tabla HTML (las otras pueden venir de esquemas distintos)
-        html = construir_tabla_html([a[3] for a in todas_alertas], todas_alertas[0][2])
+        html = construir_tabla_html([a[3] for a in todas_alertas])
         asunto = f"{len(todas_alertas)} nuevas alertas generadas ({datetime.now().strftime('%d-%m-%Y %H:%M')})"
         print("[ENVÍO] Enviando correo...")
         enviar_correo_html_con_logo(DESTINATARIOS, asunto, html, "gp-fullcolor-centrado.png")
