@@ -132,10 +132,14 @@ def enviar_correo_html_con_logo(destinatarios, asunto, cuerpo_html, path_logo):
       <body style="font-family: 'Segoe UI', Roboto, Arial, sans-serif; background-color: #f4f6f8; padding: 30px; color: #333;">
         <div style="max-width: 600px; margin: auto; background: #ffffff; padding: 25px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
 
-          <div style="display: flex; align-items: center; justify-content: flex-start; margin-bottom: 25px;">
+          <div style="display: flex; align-items: center; justify-content: flex-start; margin-bottom: 10px;">
             <img src="cid:logo_gp" alt="GP Consultores" style="max-width: 100px; margin-right: 20px;" />
-            <h2 style="color: #018ae4; margin: 0;">Alerta del Sistema de Monitoreo</h2>
+            <h2 style="color: #018ae4; margin: 0; font-size: 22px;">Alerta del Sistema de Monitoreo</h2>
           </div>
+
+          <p style="font-size: 14px; color: #666; margin-top: 10px;">
+            Se ha detectado una condición fuera de rango. A continuación se detallan los valores registrados:
+          </p>
 
           {cuerpo_html}
 
