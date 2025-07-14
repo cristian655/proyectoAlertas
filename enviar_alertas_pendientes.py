@@ -54,16 +54,24 @@ def conectar_bd(base):
     )
 
 def obtener_nombre_estacion(conn, estacion_id):
-    with conn.cursor() as cursor:
-        cursor.execute("SELECT nombre FROM estaciones WHERE estacion_id = %s", (estacion_id,))
-        resultado = cursor.fetchone()
-        return resultado["nombre"] if resultado else f"ID {estacion_id}"
+    try:
+        with conn.cursor() as cursor:
+            cursor.execute("SELECT nombre FROM estaciones WHERE estacion_id = %s", (estacion_id,))
+            resultado = cursor.fetchone()
+            return resultado["nombre"] if resultado else f"ID {estacion_id}"
+    except Exception as e:
+        logger.error(f"[ERROR] al obtener nombre estación {estacion_id}: {e}")
+        return f"ID {estacion_id}"
 
 def obtener_tipo_sensor(conn, sensor_id):
-    with conn.cursor() as cursor:
-        cursor.execute("SELECT descripcion FROM sensores WHERE sensor_id = %s", (sensor_id,))
-        resultado = cursor.fetchone()
-        return resultado["descripcion"] if resultado else f"ID {sensor_id}"
+    try:
+        with conn.cursor() as cursor:
+            cursor.execute("SELECT descripcion FROM sensores WHERE sensor_id = %s", (sensor_id,))
+            resultado = cursor.fetchone()
+            return resultado["descripcion"] if resultado else f"ID {sensor_id}"
+    except Exception as e:
+        logger.error(f"[ERROR] al obtener tipo sensor {sensor_id}: {e}")
+        return f"ID {sensor_id}"
 
 
 def obtener_alertas_no_notificadas(conn, tabla, base):
@@ -87,10 +95,16 @@ def obtener_alertas_no_notificadas(conn, tabla, base):
 
 def construir_tabla_html(alertas_con_conns):
     filas = ""
-    for _, _, conn, a in alertas_con_conns:
-        tipo = "Umbral" if a["criterio_id"] == 1 else "Detención"
-        nombre_estacion = obtener_nombre_estacion(conn, a["estacion_id"])
-        tipo_sensor = obtener_tipo_sensor(conn, a["sensor_id"])
+    for base, _, conn, a in alertas_con_conns:
+        try:
+            tipo = "Umbral" if a["criterio_id"] == 1 else "Detención"
+            nombre_estacion = obtener_nombre_estacion(conn, a["estacion_id"])
+            tipo_sensor = obtener_tipo_sensor(conn, a["sensor_id"])
+        except Exception as e:
+            logger.error(f"[LOOKUP ERROR] {base} - Estación {a['estacion_id']}, Sensor {a['sensor_id']}: {e}")
+            nombre_estacion = f"ID {a['estacion_id']}"
+            tipo_sensor = f"ID {a['sensor_id']}"
+
         filas += f"<tr><td>{a['fecha_hora']}</td><td>{nombre_estacion}</td><td>{tipo_sensor}</td><td>{a['valor']}</td><td>{tipo}</td></tr>"
 
     html = f"""
@@ -104,6 +118,7 @@ def construir_tabla_html(alertas_con_conns):
     <p style="font-size: 14px;">Revisar el sistema para más detalles.</p>
     """
     return html
+
 
 
 def marcar_alertas_como_notificadas(conn, tabla, base, ids):
