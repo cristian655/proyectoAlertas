@@ -65,6 +65,7 @@ def obtener_tipo_sensor(conn, sensor_id):
         resultado = cursor.fetchone()
         return resultado["descripcion"] if resultado else f"ID {sensor_id}"
 
+
 def obtener_alertas_no_notificadas(conn, tabla, base):
     with conn.cursor() as cursor:
         campo_id = "alerta_id"
@@ -84,9 +85,9 @@ def obtener_alertas_no_notificadas(conn, tabla, base):
             logger.info(f"[DEBUG] Alerta encontrada en {base}: {alerta}")
         return alertas
 
-def construir_tabla_html(alertas, conn):
+def construir_tabla_html(alertas_con_conns):
     filas = ""
-    for a in alertas:
+    for _, _, conn, a in alertas_con_conns:
         tipo = "Umbral" if a["criterio_id"] == 1 else "Detención"
         nombre_estacion = obtener_nombre_estacion(conn, a["estacion_id"])
         tipo_sensor = obtener_tipo_sensor(conn, a["sensor_id"])
@@ -103,6 +104,7 @@ def construir_tabla_html(alertas, conn):
     <p style="font-size: 14px;">Revisar el sistema para más detalles.</p>
     """
     return html
+
 
 def marcar_alertas_como_notificadas(conn, tabla, base, ids):
     if not ids:
@@ -148,7 +150,7 @@ def main():
             return
 
         # Usamos la primera conexión para construir la tabla HTML (las otras pueden venir de esquemas distintos)
-        html = construir_tabla_html([a[3] for a in todas_alertas], todas_alertas[0][2])
+        html = construir_tabla_html(todas_alertas)
         asunto = f"{len(todas_alertas)} nuevas alertas generadas ({datetime.now().strftime('%d-%m-%Y %H:%M')})"
         print("[ENVÍO] Enviando correo...")
         enviar_correo_html_con_logo(DESTINATARIOS, asunto, html, "gp-fullcolor-centrado.png")
