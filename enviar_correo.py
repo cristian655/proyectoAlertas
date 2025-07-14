@@ -134,7 +134,7 @@ def enviar_correo_html_con_logo(destinatarios, asunto, cuerpo_html, path_logo):
 
           <div style="display: flex; align-items: center; justify-content: flex-start; margin-bottom: 10px;">
             <img src="cid:logo_gp" alt="GP Consultores" style="max-width: 100px; margin-right: 20px;" />
-            <h2 style="color: #018ae4; margin: 0; font-size: 22px;">Alerta del Sistema de Monitoreo</h2>
+            <h2 style="color: #018ae4; margin: 0; font-size: 28px;">Alerta del Sistema de Monitoreo</h2>
           </div>
 
           <p style="font-size: 14px; color: #666; margin-top: 10px;">
@@ -170,7 +170,6 @@ def enviar_correo_html_con_logo(destinatarios, asunto, cuerpo_html, path_logo):
     except Exception as e:
         logger.error(f"[EMAIL] Error al enviar correo con logo: {e}")
 
-# Ejecutar prueba directa si se corre este script
 def probar_alerta_umbral_con_logo():
     tipo_sensor = "pH"
     nombre_estacion = "CRW-01"
