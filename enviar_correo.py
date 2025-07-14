@@ -138,7 +138,7 @@ def enviar_correo_html_con_logo(destinatarios, asunto, cuerpo_html, path_logo):
           </div>
 
           <p style="font-size: 14px; color: #666; margin-top: 10px;">
-            Se ha detectado una condición fuera de rango. A continuación se detallan los valores registrados:
+            Se han identificado condiciones que requieren revisión. A continuación se detallan los registros asociados:
           </p>
 
           {cuerpo_html}

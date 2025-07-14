@@ -22,14 +22,14 @@ TABLAS_Y_BASES = [
     ("GP-MLP-Contac", "alertas")
 ]
 
-MODO_ENVIO = int(os.getenv("MODO_ENVIO", 1))
+MODO_ENVIO = int(os.getenv("MODO_ENVIO", 3))
 
 DESTINATARIOS_OFICINA = [
     "cgonzalez@gpconsultores.cl","erivas@gpconsultores.cl","hjilberto@gpconsultores.cl","rconstanzo@gpconsultores.cl"
 ]
 
 DESTINATARIOS_CLIENTE = [
-    "cliente@externo.cl"
+    "vvaldebenito@pelambres.cl"
 ]
 
 if MODO_ENVIO == 1:
