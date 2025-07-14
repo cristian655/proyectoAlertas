@@ -62,8 +62,13 @@ def obtener_nombre_estacion(conn, base, estacion_id):
         return f"ID {estacion_id}"
 
 def obtener_tipo_sensor(conn, base, sensor_id):
-    tabla = "Sensores" if base == "GP-MLP-Telemtry" else "sensores"
-    campo = "tipo"
+    if base == "GP-MLP-Telemtry":
+        tabla = "Sensores"
+        campo = "tipo"
+    else:
+        tabla = "sensores"
+        campo = "tipo_raw"
+
     try:
         with conn.cursor() as cursor:
             cursor.execute(f"SELECT {campo} FROM {tabla} WHERE sensor_id = %s", (sensor_id,))
