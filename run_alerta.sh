@@ -1,4 +1,5 @@
 #!/bin/bash
+cd /home/ubuntu/proyectoAlertas
 
 echo "=== CRON EJECUTADO $(date) ===" >> /home/ubuntu/proyectoAlertas/logs/cron.log
 
