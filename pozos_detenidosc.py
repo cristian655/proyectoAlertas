@@ -3,7 +3,7 @@ from sqlalchemy import text
 from conexion import engine
 from logger import logger
 
-def detectar_pozos_detenidos(horas=4):
+def detectar_pozos_detenidos(horas=3):
     try:
         with engine.begin() as conn:
             conn.execute(text("CALL `GP-MLP-Contac`.marcar_pozos_detenidos(:horas)"), {"horas": horas})
