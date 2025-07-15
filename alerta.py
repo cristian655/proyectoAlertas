@@ -103,7 +103,7 @@ def limpiar_alertas_inactivas(dias: int = 15):
 
 #Función para invocar la vista de estado de alertas
 def obtener_resumen_diario():
-    query = text("SELECT * FROM vista_alertas_detalle")  # Ajusta el nombre si es distinto
+    query = text("SELECT * FROM vista_alertas_unificada")  # Ajusta el nombre si es distinto
     with engine.connect() as conn:
         df = pd.read_sql(query, conn)
     return df
