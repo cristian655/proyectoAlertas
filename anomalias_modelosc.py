@@ -29,9 +29,14 @@ def verificar_anomalias_por_modelo():
 
         query = text("""
             SELECT estampa_tiempo AS fecha_hora, valor_medicion AS valor
-            FROM `GP-MLP-Contac`.res31_mediciones m
-            JOIN `GP-MLP-Contac`.diccionario_tags d ON m.tag_pi = d.tag_pi
-            WHERE d.id = :sensor_id AND estampa_tiempo >= NOW() - INTERVAL 30 DAY
+            FROM `GP-MLP-Contac`.res31_mediciones
+            WHERE tag_pi = (
+                SELECT tag_pi
+                FROM `GP-MLP-Contac`.sensores
+                WHERE sensor_id = :sensor_id
+                LIMIT 1
+            )
+            AND estampa_tiempo >= NOW() - INTERVAL 30 DAY
             ORDER BY estampa_tiempo
         """)
 
@@ -43,6 +48,9 @@ def verificar_anomalias_por_modelo():
             continue
 
         try:
+            # DEBUG opcional para verificar los últimos datos
+            logger.debug(f"[DATA] Últimos registros para sensor {sensor_id}:\n{df.tail()}")
+
             algoritmos_detectores = []
 
             resultado_hotelling = hotelling_T2_univariado(df)["anomalía"].iloc[-1]
@@ -70,6 +78,7 @@ def verificar_anomalias_por_modelo():
                     observacion=observacion
                 )
 
+                # Descomenta si ya quieres enviar correo
                 # notificar_alerta_modelo(nombre_estacion, tipo_sensor, valor, fecha_hora, algoritmos_detectores)
             else:
                 logger.info(f"[OK] Sensor {sensor_id} sin anomalía según modelos.")
