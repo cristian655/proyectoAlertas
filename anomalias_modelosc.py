@@ -28,16 +28,13 @@ def verificar_anomalias_por_modelo():
         nombre_estacion = sensor["nombre_estacion"]
 
         query = text("""
-            SELECT estampa_tiempo AS fecha_hora, valor_medicion AS valor
-            FROM `GP-MLP-Contac`.res31_mediciones
-            WHERE tag_pi = (
-                SELECT tag_pi
-                FROM `GP-MLP-Contac`.sensores
-                WHERE sensor_id = :sensor_id
-                LIMIT 1
-            )
-            AND estampa_tiempo >= NOW() - INTERVAL 30 DAY
-            ORDER BY estampa_tiempo
+            SELECT m.estampa_tiempo AS fecha_hora, m.valor_medicion AS valor
+            FROM `GP-MLP-Contac`.res31_mediciones m
+            JOIN `GP-MLP-Contac`.sensores s
+              ON m.tag_pi COLLATE utf8mb4_general_ci = s.tag_pi COLLATE utf8mb4_general_ci
+            WHERE s.sensor_id = :sensor_id
+              AND m.estampa_tiempo >= NOW() - INTERVAL 30 DAY
+            ORDER BY m.estampa_tiempo
         """)
 
         with engine.connect() as conn:
@@ -48,7 +45,6 @@ def verificar_anomalias_por_modelo():
             continue
 
         try:
-            # DEBUG opcional para verificar los últimos datos
             logger.debug(f"[DATA] Últimos registros para sensor {sensor_id}:\n{df.tail()}")
 
             algoritmos_detectores = []
@@ -78,7 +74,7 @@ def verificar_anomalias_por_modelo():
                     observacion=observacion
                 )
 
-                # Descomenta si ya quieres enviar correo
+                # Descomenta esta línea si quieres enviar notificación por correo
                 # notificar_alerta_modelo(nombre_estacion, tipo_sensor, valor, fecha_hora, algoritmos_detectores)
             else:
                 logger.info(f"[OK] Sensor {sensor_id} sin anomalía según modelos.")
