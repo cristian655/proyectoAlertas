@@ -54,9 +54,8 @@ def verificar_anomalias_por_modelo():
             max_val = df["valor"].max()
             rango_val = max_val - min_val
 
-            logger.debug(
-                f"[STATS] Sensor {sensor_id} | STD={std_val:.5f} | AVG={avg_val:.5f} | MIN={min_val:.5f} | MAX={max_val:.5f} | RANGO={rango_val:.5f}"
-            )
+            logger.debug(f"[STATS] Sensor {sensor_id} | STD={std_val:.5f} | AVG={avg_val:.5f} | MIN={min_val:.5f} | MAX={max_val:.5f} | RANGO={rango_val:.5f}")
+
 
             if std_val < 0.005 or rango_val < 0.05:
                 logger.warning(f"⚠️ Señal constante detectada: std={std_val:.5f}, rango={rango_val:.5f}. Modelos no aplicados.")
