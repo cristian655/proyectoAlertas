@@ -1,9 +1,8 @@
-# anomalias_modelosc.py
-
 import pandas as pd
 from sqlalchemy import text
 from conexion import engine
 from logger import logger
+from zoneinfo import ZoneInfo
 from registro_alertasc import registrar_alarma_persistente
 from algoritmos_univariados import hotelling_T2_univariado, isolation_forest, rolling_zscore
 from enviar_correo import notificar_alerta_modelo
@@ -64,6 +63,15 @@ def verificar_anomalias_por_modelo():
                 fecha_hora = df["fecha_hora"].iloc[-1]
                 valor = df["valor"].iloc[-1]
                 observacion = "Anomalía detectada por: " + ", ".join(algoritmos_detectores)
+
+                # 🔄 Convertir a hora chilena
+                if fecha_hora.tzinfo is None:
+                    fecha_hora = fecha_hora.replace(tzinfo=ZoneInfo("UTC")).astimezone(ZoneInfo("America/Santiago"))
+                else:
+                    fecha_hora = fecha_hora.astimezone(ZoneInfo("America/Santiago"))
+
+                # 🧽 Quitar tzinfo para que MySQL lo acepte
+                fecha_hora = fecha_hora.replace(tzinfo=None)
 
                 registrar_alarma_persistente(
                     sensor_id=sensor_id,

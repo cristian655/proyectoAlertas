@@ -1,12 +1,11 @@
-# anomalias_modelos.py
-
 import pandas as pd
 from sqlalchemy import text
 from conexion import engine
 from logger import logger
+from zoneinfo import ZoneInfo
 from registro_alertas import registrar_alarma_persistente
 from algoritmos_univariados import hotelling_T2_univariado, isolation_forest, rolling_zscore
-from enviar_correo import notificar_alerta_modelo
+from enviar_correo import notificar_alerta_modelo  # opcional, descomentable
 
 def verificar_anomalias_por_modelo():
     logger.info("[INICIO] Verificación por modelos de anomalía...")
@@ -41,7 +40,6 @@ def verificar_anomalias_por_modelo():
             continue
 
         try:
-            resultados = {}
             algoritmos_detectores = []
 
             resultado_hotelling = hotelling_T2_univariado(df)["anomalía"].iloc[-1]
@@ -60,6 +58,15 @@ def verificar_anomalias_por_modelo():
                 valor = df["valor"].iloc[-1]
                 observacion = "Anomalía detectada por: " + ", ".join(algoritmos_detectores)
 
+                # 🔄 Convertir a hora chilena
+                if fecha_hora.tzinfo is None:
+                    fecha_hora = fecha_hora.replace(tzinfo=ZoneInfo("UTC")).astimezone(ZoneInfo("America/Santiago"))
+                else:
+                    fecha_hora = fecha_hora.astimezone(ZoneInfo("America/Santiago"))
+
+                # 🧽 Quitar tzinfo para que MySQL lo acepte
+                fecha_hora = fecha_hora.replace(tzinfo=None)
+
                 registrar_alarma_persistente(
                     sensor_id=sensor_id,
                     estacion_id=estacion_id,
@@ -69,7 +76,14 @@ def verificar_anomalias_por_modelo():
                     observacion=observacion
                 )
 
-                #notificar_alerta_modelo(nombre_estacion=nombre_estacion,tipo_sensor=tipo_sensor,valor=valor,fecha_hora=fecha_hora,algoritmos_detectores=algoritmos_detectores)
+                # Descomentar si quieres notificación por correo para criterio 3
+                # notificar_alerta_modelo(
+                #     nombre_estacion=nombre_estacion,
+                #     tipo_sensor=tipo_sensor,
+                #     valor=valor,
+                #     fecha_hora=fecha_hora,
+                #     algoritmos_detectores=algoritmos_detectores
+                # )
             else:
                 logger.info(f"[OK] Sensor {sensor_id} sin anomalía según modelos.")
 
