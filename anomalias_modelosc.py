@@ -1,4 +1,4 @@
-#anomalias_modelosc.py
+# anomalias_modelosc.py
 
 import pandas as pd
 from sqlalchemy import text
@@ -48,13 +48,27 @@ def verificar_anomalias_por_modelo():
         try:
             logger.debug(f"[DATA] Últimos registros para sensor {sensor_id}:\n{df.tail()}")
 
+            std_val = df["valor"].std()
+            avg_val = df["valor"].mean()
+            min_val = df["valor"].min()
+            max_val = df["valor"].max()
+            rango_val = max_val - min_val
+
+            logger.debug(
+                f"[STATS] Sensor {sensor_id} | STD={std_val:.5f} | AVG={avg_val:.5f} | MIN={min_val:.5f} | MAX={max_val:.5f} | RANGO={rango_val:.5f}"
+            )
+
+            if std_val < 0.005 or rango_val < 0.05:
+                logger.warning(f"⚠️ Señal constante detectada: std={std_val:.5f}, rango={rango_val:.5f}. Modelos no aplicados.")
+                continue
+
             algoritmos_detectores = []
 
             resultado_hotelling = hotelling_T2_univariado(df)["anomalía"].iloc[-1]
             resultado_iso = isolation_forest(df)["anomalía"].iloc[-1]
             resultado_z = rolling_zscore(df)["anomalía"].iloc[-1]
+
             logger.debug(f"[MODELOS] Sensor {sensor_id} | Hotelling={resultado_hotelling} | ISO={resultado_iso} | Z={resultado_z}")
-            logger.debug(f"[STATS] Sensor {sensor_id} | STD={df['valor'].std():.3f} | AVG={df['valor'].mean():
 
             if resultado_hotelling:
                 algoritmos_detectores.append("Hotelling T²")
@@ -86,8 +100,8 @@ def verificar_anomalias_por_modelo():
                     observacion=observacion
                 )
 
-                # Descomenta esta línea si quieres enviar notificación por correo
                 # notificar_alerta_modelo(nombre_estacion, tipo_sensor, valor, fecha_hora, algoritmos_detectores)
+
             else:
                 logger.info(f"[OK] Sensor {sensor_id} sin anomalía según modelos.")
 
