@@ -36,7 +36,6 @@ def registrar_alarma_persistente(sensor_id, estacion_id, fecha_hora, valor, crit
                     contador = contador + 1,
                     valor = :valor,
                     timestamp = :fecha_hora,
-                    timestamp_arrive = CONVERT_TZ(NOW(), 'UTC', 'America/Santiago'),
                     observacion = :observacion
                 WHERE alerta_id = :alerta_id
             """), {
@@ -53,11 +52,14 @@ def registrar_alarma_persistente(sensor_id, estacion_id, fecha_hora, valor, crit
                 notificar_alerta(tipo_sensor, nombre_estacion, valor, ultima["contador"] + 1, fecha_hora)
 
         else:
+            # Se asigna timestamp_arrive = fecha_hora (hora del dato anómalo)
+            fecha_llegada = fecha_hora
+
             conn.execute(text("""
                 INSERT INTO Alertas (
-                    sensor_id, estacion_id, timestamp, valor, criterio_id, contador, enable, observacion
+                    sensor_id, estacion_id, timestamp, valor, criterio_id, contador, enable, observacion, timestamp_arrive
                 ) VALUES (
-                    :sensor_id, :estacion_id, :fecha_hora, :valor, :criterio_id, 1, 1, :observacion
+                    :sensor_id, :estacion_id, :fecha_hora, :valor, :criterio_id, 1, 1, :observacion, :fecha_llegada
                 )
             """), {
                 "sensor_id": sensor_id,
@@ -65,7 +67,8 @@ def registrar_alarma_persistente(sensor_id, estacion_id, fecha_hora, valor, crit
                 "fecha_hora": fecha_hora,
                 "valor": valor,
                 "criterio_id": criterio_id,
-                "observacion": observacion
+                "observacion": observacion,
+                "fecha_llegada": fecha_llegada
             })
             logger.warning("[ALERTA] Nueva alarma registrada para sensor {}".format(sensor_id))
 
