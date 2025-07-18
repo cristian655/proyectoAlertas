@@ -1,3 +1,5 @@
+#anomalias_modelosc.py
+
 import pandas as pd
 from sqlalchemy import text
 from conexion import engine
@@ -51,6 +53,8 @@ def verificar_anomalias_por_modelo():
             resultado_hotelling = hotelling_T2_univariado(df)["anomalía"].iloc[-1]
             resultado_iso = isolation_forest(df)["anomalía"].iloc[-1]
             resultado_z = rolling_zscore(df)["anomalía"].iloc[-1]
+            logger.debug(f"[MODELOS] Sensor {sensor_id} | Hotelling={resultado_hotelling} | ISO={resultado_iso} | Z={resultado_z}")
+            logger.debug(f"[STATS] Sensor {sensor_id} | STD={df['valor'].std():.3f} | AVG={df['valor'].mean():
 
             if resultado_hotelling:
                 algoritmos_detectores.append("Hotelling T²")
