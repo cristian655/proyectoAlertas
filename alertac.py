@@ -160,6 +160,6 @@ if __name__ == "__main__":
     resolver_pozos_recuperados()
     logger.info("[FIN] Revisión de pozos detenidos y recuperados.")
 
-    verificar_anomalias_por_modelo()
+    #verificar_anomalias_por_modelo() #ESTABA LLAMANDO A LA MISMA FUNCION!!!!
     desactivar_alertas_modelo()
     limpiar_alertas_inactivas(dias=0)

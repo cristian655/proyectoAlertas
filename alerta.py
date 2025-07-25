@@ -150,7 +150,7 @@ if __name__ == "__main__":
     detectar_pozos_detenidos(horas=4)
     resolver_pozos_recuperados()
     logger.info("[FIN] Revision de pozos detenidos y recuperados.")
-    verificar_anomalias_por_modelo()
+    #verificar_anomalias_por_modelo()
     desactivar_alertas_modelo()
     # 🔽 Limpieza de alertas inactivas
     limpiar_alertas_inactivas(dias=0)
