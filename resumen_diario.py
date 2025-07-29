@@ -32,11 +32,9 @@ def enviar_resumen_diario():
                 border: 1px solid #dddddd;
                 text-align: left;
                 padding: 8px;
-                vertical-align: top;
             }}
             th {{
-                background-color: #018ae4;
-                color: white;
+                background-color: #f2f2f2;
             }}
             tr:nth-child(even) {{
                 background-color: #f9f9f9;
@@ -60,8 +58,10 @@ def enviar_resumen_diario():
         """
 
     asunto = f"📊 Resumen Periódico del Sistema de Alertas ({total_alertas} alertas)"
+    # Enviamos usando el método que adjunta el logo correctamente como CID
     enviar_correo_html_con_logo(DESTINATARIOS_POR_DEFECTO, asunto, cuerpo_html, "gp-fullcolor-centrado.png")
 
 
 if __name__ == "__main__":
     enviar_resumen_diario()
+
