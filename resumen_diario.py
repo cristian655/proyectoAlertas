@@ -8,14 +8,12 @@ def enviar_resumen_diario():
     if df.empty:
         cuerpo_html = """
         <html>
-        <body style="font-family: Arial, sans-serif; background-color: #f4f6f8; padding: 30px; color: #333;">
-        <div style="max-width: 800px; margin: auto; background: #ffffff; padding: 25px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
-            <div style="display:flex; align-items:center; margin-bottom:15px;">
-                <img src="cid:logo_gp" alt="GP Consultores" style="max-width: 100px; margin-right: 20px;" />
+        <body style="font-family: Arial, sans-serif;">
+            <div style="max-width: 800px; margin: auto; text-align: center;">
+                <img src="cid:logo_gp" alt="GP Consultores" style="max-width: 120px; margin-bottom: 20px;" />
                 <h2 style="color:#018ae4;">📊 Resumen Periódico del Sistema de Alertas</h2>
+                <p>No se encontraron alertas.</p>
             </div>
-            <p>No se encontraron alertas.</p>
-        </div>
         </body>
         </html>
         """
@@ -24,29 +22,17 @@ def enviar_resumen_diario():
         <html>
         <head>
         <style>
-            body {{
-                font-family: 'Segoe UI', Roboto, Arial, sans-serif;
-                background-color: #f4f6f8;
-                padding: 30px;
-                color: #333;
-            }}
-            .contenedor {{
-                max-width: 800px;
-                margin: auto;
-                background: #ffffff;
-                padding: 25px;
-                border-radius: 10px;
-                box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            }}
             table {{
                 width: 100%;
                 border-collapse: collapse;
+                font-family: Arial, sans-serif;
                 font-size: 14px;
             }}
             th, td {{
                 border: 1px solid #dddddd;
                 text-align: left;
                 padding: 8px;
+                vertical-align: top;
             }}
             th {{
                 background-color: #018ae4;
@@ -55,26 +41,20 @@ def enviar_resumen_diario():
             tr:nth-child(even) {{
                 background-color: #f9f9f9;
             }}
-            .titulo {{
-                color: #018ae4;
-                margin-bottom: 10px;
-            }}
         </style>
         </head>
-        <body>
-        <div class="contenedor">
-            <div style="display:flex; align-items:center; margin-bottom:15px;">
-                <img src="cid:logo_gp" alt="GP Consultores" style="max-width: 100px; margin-right: 20px;" />
-                <div>
-                    <h2 class="titulo">📊 Resumen Periódico del Sistema de Alertas</h2>
+        <body style="font-family: Arial, sans-serif;">
+            <div style="max-width: 900px; margin: auto;">
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <img src="cid:logo_gp" alt="GP Consultores" style="max-width: 120px; margin-bottom: 10px;" />
+                    <h2 style="color:#018ae4;">📊 Resumen Periódico del Sistema de Alertas</h2>
                     <p style="margin:0; color:#555;">Se encontraron <strong>{total_alertas}</strong> alertas activas.</p>
                 </div>
+                {df.to_html(index=False, escape=False)}
+                <p style="font-size:12px; color:#888; text-align:center; margin-top:20px;">
+                    Este correo fue generado automáticamente por el sistema de monitoreo de <strong>GP Consultores</strong>.
+                </p>
             </div>
-            {df.to_html(index=False, escape=False)}
-            <p style="font-size:12px; color:#888; margin-top:20px;">
-                Este correo fue generado automáticamente por el sistema de monitoreo de <strong>GP Consultores</strong>.
-            </p>
-        </div>
         </body>
         </html>
         """
