@@ -25,7 +25,8 @@ TABLAS_Y_BASES = [
 MODO_ENVIO = int(os.getenv("MODO_ENVIO", 3))
 
 DESTINATARIOS_OFICINA = [
-    "cgonzalez@gpconsultores.cl","erivas@gpconsultores.cl","hjilberto@gpconsultores.cl","rconstanzo@gpconsultores.cl"
+    "cgonzalez@gpconsultores.cl", "erivas@gpconsultores.cl",
+    "hjilberto@gpconsultores.cl", "rconstanzo@gpconsultores.cl"
 ]
 
 DESTINATARIOS_CLIENTE = [
@@ -39,6 +40,11 @@ elif MODO_ENVIO == 2:
 else:
     DESTINATARIOS = DESTINATARIOS_OFICINA + DESTINATARIOS_CLIENTE
 
+
+# ----------------------
+# Funciones auxiliares
+# ----------------------
+
 def conectar_bd(base):
     return pymysql.connect(
         host=DB_HOST,
@@ -48,6 +54,7 @@ def conectar_bd(base):
         port=DB_PORT,
         cursorclass=pymysql.cursors.DictCursor
     )
+
 
 def obtener_nombre_estacion(conn, base, estacion_id):
     tabla = "Estaciones" if base == "GP-MLP-Telemtry" else "estaciones"
@@ -60,6 +67,7 @@ def obtener_nombre_estacion(conn, base, estacion_id):
     except Exception as e:
         logger.error(f"[ERROR] al obtener nombre estación {estacion_id} en {base}: {e}")
         return f"ID {estacion_id}"
+
 
 def obtener_tipo_sensor(conn, base, sensor_id):
     if base == "GP-MLP-Telemtry":
@@ -77,6 +85,7 @@ def obtener_tipo_sensor(conn, base, sensor_id):
     except Exception as e:
         logger.error(f"[ERROR] al obtener tipo sensor {sensor_id} en {base}: {e}")
         return f"ID {sensor_id}"
+
 
 def obtener_alertas_no_notificadas(conn, tabla, base):
     with conn.cursor() as cursor:
@@ -97,42 +106,47 @@ def obtener_alertas_no_notificadas(conn, tabla, base):
             logger.info(f"[DEBUG] Alerta encontrada en {base}: {alerta}")
         return alertas
 
-def construir_tabla_html(alertas_con_conns):
-    filas = ""
+
+# ----------------------
+# Constructor HTML sin tabla
+# ----------------------
+
+def construir_alertas_html(alertas_con_conns):
+    if not alertas_con_conns:
+        return "<p>No se encontraron alertas.</p>"
+
+    bloques = ""
     for base, _, conn, a in alertas_con_conns:
-        try:
-            criterio = a["criterio_id"]
-            if criterio == 1:
-                tipo = "Falla comunicación"
-            elif criterio == 2:
-                tipo = "Umbral"
-            elif criterio == 3:
-                tipo = "Tendencia"
-            else:
-                tipo = f"ID {criterio}"
+        criterio = a["criterio_id"]
+        if criterio == 1:
+            tipo = "Falla de comunicación"
+        elif criterio == 2:
+            tipo = "Umbral"
+        else:
+            tipo = f"Criterio {criterio}"
 
-            nombre_estacion = obtener_nombre_estacion(conn, base, a["estacion_id"])
-            tipo_sensor = obtener_tipo_sensor(conn, base, a["sensor_id"])
-            observacion = a.get("observacion", "-")
-        except Exception as e:
-            logger.error(f"[ERROR] Falló lookup en {base} para alerta {a['alerta_id']}: {e}")
-            nombre_estacion = f"ID {a['estacion_id']}"
-            tipo_sensor = f"ID {a['sensor_id']}"
-            observacion = "Error"
+        nombre_estacion = obtener_nombre_estacion(conn, base, a["estacion_id"])
+        tipo_sensor = obtener_tipo_sensor(conn, base, a["sensor_id"])
+        observacion = a.get("observacion", "-")
+        fecha = a["fecha_hora"]
+        valor = a["valor"]
 
-        filas += f"<tr><td>{a['fecha_hora']}</td><td>{nombre_estacion}</td><td>{tipo_sensor}</td><td>{a['valor']}</td><td>{tipo}</td><td>{observacion}</td></tr>"
+        bloques += f"""
+        <div style="margin-bottom: 20px; padding: 15px; border: 1px solid #eee; border-radius: 8px;">
+            <p>⚠️ <strong>Alerta en el sensor {tipo_sensor}</strong></p>
+            <p>Estación: <strong>{nombre_estacion}</strong></p>
+            <p>Valor medido: <strong>{valor}</strong></p>
+            <p>Tipo: <strong>{tipo}</strong></p>
+            <p>{observacion}</p>
+            <p style="color:#555; font-size: 12px;">{fecha}</p>
+        </div>
+        """
 
-    html = f"""
-    <h3>Alertas Detectadas</h3>
-    <table border="1" cellspacing="0" cellpadding="4" style="border-collapse: collapse; width: 100%;">
-        <tr style="background-color: #169130; color: white;">
-            <th>Fecha</th><th>Estación</th><th>Sensor</th><th>Valor</th><th>Tipo</th><th>Observación</th>
-        </tr>
-        {filas}
-    </table>
-    <p style="font-size: 14px;">Revisar el sistema para más detalles.</p>
+    return f"""
+    <h3 style="color:#018ae4;">Alertas Detectadas</h3>
+    {bloques}
+    <p style="font-size: 12px; color: #999;">Revisar el sistema para más detalles.</p>
     """
-    return html
 
 
 def marcar_alertas_como_notificadas(conn, tabla, base, ids):
@@ -147,6 +161,11 @@ def marcar_alertas_como_notificadas(conn, tabla, base, ids):
             WHERE {campo_id} IN ({ids_str})
         ''')
         conn.commit()
+
+
+# ----------------------
+# Script principal
+# ----------------------
 
 def main():
     todas_alertas = []
@@ -178,12 +197,14 @@ def main():
             print("[ALERTAS] No se encontraron alertas pendientes.")
             return
 
-        html = construir_tabla_html(todas_alertas)
-        asunto = f" Reporte Automático de Alertas ({len(todas_alertas)}) "
+        # Generar HTML sin tabla
+        html = construir_alertas_html(todas_alertas)
+        asunto = f"⚠️ Reporte Automático de Alertas ({len(todas_alertas)})"
         print("[ENVÍO] Enviando correo...")
         enviar_correo_html_con_logo(DESTINATARIOS, asunto, html, "gp-fullcolor-centrado.png")
         print("[ENVÍO] Correo enviado")
 
+        # Marcar alertas como notificadas
         for conn, base, tabla in [(c[0], c[1], c[2]) for c in conexiones]:
             ids = [a[3]['alerta_id'] for a in todas_alertas if a[0] == base and a[1] == tabla]
             print(f"[MARCAR] Marcando como notificadas en {base}: {ids}")
@@ -194,6 +215,7 @@ def main():
     finally:
         for conn, _, _ in conexiones:
             conn.close()
+
 
 if __name__ == "__main__":
     main()
