@@ -1,10 +1,16 @@
 from alerta import obtener_resumen_diario
 from enviar_correo import enviar_correo_html, DESTINATARIOS_POR_DEFECTO
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from email.mime.image import MIMEImage
+import os
 
 def enviar_resumen_diario():
     df = obtener_resumen_diario()
     total_alertas = len(df)
 
+    # HTML con solo un logo usando CID
     if df.empty:
         cuerpo_html = """
         <html>
@@ -60,8 +66,38 @@ def enviar_resumen_diario():
         """
 
     asunto = f"📊 Resumen Periódico del Sistema de Alertas ({total_alertas} alertas)"
-    # Solo un logo en el HTML, no adjuntamos automáticamente otro
-    enviar_correo_html(DESTINATARIOS_POR_DEFECTO, asunto, cuerpo_html)
+
+    # --- Envío de correo con un solo logo CID ---
+    from dotenv import load_dotenv
+    load_dotenv()
+    import os
+
+    SMTP_SERVER = "email-smtp.us-east-1.amazonaws.com"
+    SMTP_PORT = 587
+    SMTP_USER = os.getenv("SMTP_USER")
+    SMTP_PASS = os.getenv("SMTP_PASS")
+    REMITENTE = "info@gptelemetria.cl"
+
+    msg = MIMEMultipart("related")
+    msg["From"] = REMITENTE
+    msg["To"] = ", ".join(DESTINATARIOS_POR_DEFECTO)
+    msg["Subject"] = asunto
+
+    msg_alt = MIMEMultipart("alternative")
+    msg.attach(msg_alt)
+    msg_alt.attach(MIMEText(cuerpo_html, "html"))
+
+    # Adjuntar logo como imagen CID
+    logo_path = os.path.join(os.path.dirname(__file__), "gp-fullcolor-centrado.png")
+    with open(logo_path, "rb") as f:
+        logo = MIMEImage(f.read())
+        logo.add_header("Content-ID", "<logo_gp>")
+        msg.attach(logo)
+
+    with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as servidor:
+        servidor.starttls()
+        servidor.login(SMTP_USER, SMTP_PASS)
+        servidor.sendmail(REMITENTE, DESTINATARIOS_POR_DEFECTO, msg.as_string())
 
 
 if __name__ == "__main__":
