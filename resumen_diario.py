@@ -1,5 +1,5 @@
 from alerta import obtener_resumen_diario
-from enviar_correo import enviar_correo_html_con_logo, DESTINATARIOS_POR_DEFECTO
+from enviar_correo import enviar_correo_html, DESTINATARIOS_POR_DEFECTO
 
 def enviar_resumen_diario():
     df = obtener_resumen_diario()
@@ -23,7 +23,7 @@ def enviar_resumen_diario():
         <head>
         <style>
             table {{
-                width: 100%;
+                width: 800px;
                 border-collapse: collapse;
                 font-family: Arial, sans-serif;
                 font-size: 14px;
@@ -32,6 +32,8 @@ def enviar_resumen_diario():
                 border: 1px solid #dddddd;
                 text-align: left;
                 padding: 8px;
+                vertical-align: top;
+                word-wrap: break-word;
             }}
             th {{
                 background-color: #f2f2f2;
@@ -42,7 +44,7 @@ def enviar_resumen_diario():
         </style>
         </head>
         <body style="font-family: Arial, sans-serif;">
-            <div style="max-width: 900px; margin: auto;">
+            <div style="max-width: 800px; margin: auto;">
                 <div style="text-align: center; margin-bottom: 20px;">
                     <img src="cid:logo_gp" alt="GP Consultores" style="max-width: 120px; margin-bottom: 10px;" />
                     <h2 style="color:#018ae4;">📊 Resumen Periódico del Sistema de Alertas</h2>
@@ -58,10 +60,9 @@ def enviar_resumen_diario():
         """
 
     asunto = f"📊 Resumen Periódico del Sistema de Alertas ({total_alertas} alertas)"
-    # Enviamos usando el método que adjunta el logo correctamente como CID
-    enviar_correo_html_con_logo(DESTINATARIOS_POR_DEFECTO, asunto, cuerpo_html, "gp-fullcolor-centrado.png")
+    # Solo un logo en el HTML, no adjuntamos automáticamente otro
+    enviar_correo_html(DESTINATARIOS_POR_DEFECTO, asunto, cuerpo_html)
 
 
 if __name__ == "__main__":
     enviar_resumen_diario()
-
