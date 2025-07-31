@@ -133,8 +133,8 @@ if __name__ == "__main__":
             limite_inf_decimal = Decimal(limite_inf) if limite_inf is not None else None
             limite_sup_decimal = Decimal(limite_sup) if limite_sup is not None else None
 
-            if (limite_inf_decimal is not None and valor_decimal < limite_inf_decimal) or \
-               (limite_sup_decimal is not None and valor_decimal > limite_sup_decimal):
+            if (limite_inf_decimal is not None and valor_decimal <= limite_inf_decimal) or \
+               (limite_sup_decimal is not None and valor_decimal >= limite_sup_decimal):
                 mensaje = (
                     f"Valor fuera de umbral en {nombre_estacion} ({tipo}): "
                     f"{valor} (umbral: {limite_inf} - {limite_sup})"

@@ -133,7 +133,7 @@ if __name__ == "__main__":
             logger.info("[INFO] Sin lectura para sensor {}".format(sensor_id))
             continue
 
-        if (limite_inf is not None and valor < limite_inf) or (limite_sup is not None and valor > limite_sup):
+        if (limite_inf is not None and valor <= limite_inf) or (limite_sup is not None and valor >= limite_sup):
             mensaje = "Valor fuera de umbral en {} ({}): {} (umbral: {} - {})".format(
                 nombre_estacion, tipo, valor, limite_inf, limite_sup
             )
