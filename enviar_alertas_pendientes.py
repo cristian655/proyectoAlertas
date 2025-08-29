@@ -25,12 +25,12 @@ TABLAS_Y_BASES = [
 MODO_ENVIO = int(os.getenv("MODO_ENVIO", 3))
 
 DESTINATARIOS_OFICINA = [
-    "cgonzalez@gpconsultores.cl", "erivas@gpconsultores.cl",
-    "hjilberto@gpconsultores.cl", "rconstanzo@gpconsultores.cl"
+    "cgonzalez@gpconsultores.cl", "erivas@gpconsultores.cl"#,
+    #"hjilberto@gpconsultores.cl", "rconstanzo@gpconsultores.cl"
 ]
 
 DESTINATARIOS_CLIENTE = [
-    "vvaldebenito@pelambres.cl"
+   # "vvaldebenito@pelambres.cl"
 ]
 
 if MODO_ENVIO == 1:
@@ -199,7 +199,7 @@ def main():
 
         # Generar HTML sin tabla
         html = construir_alertas_html(todas_alertas)
-        asunto = f"⚠️ Reporte Automático de Alertas ({len(todas_alertas)})"
+        asunto = f"⚠️ Reporte Automático de Alerta ({len(todas_alertas)})"
         print("[ENVÍO] Enviando correo...")
         enviar_correo_html_con_logo(DESTINATARIOS, asunto, html, "gp-fullcolor-centrado.png")
         print("[ENVÍO] Correo enviado")
