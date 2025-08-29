@@ -199,7 +199,7 @@ def main():
 
         # Generar HTML sin tabla
         html = construir_alertas_html(todas_alertas)
-        asunto = f"⚠️ Reporte Automático de Alerta ({len(todas_alertas)})"
+        asunto = f"⚠️ Reporte Automático de Alertas [{len(todas_alertas)}]"
         print("[ENVÍO] Enviando correo...")
         enviar_correo_html_con_logo(DESTINATARIOS, asunto, html, "gp-fullcolor-centrado.png")
         print("[ENVÍO] Correo enviado")
