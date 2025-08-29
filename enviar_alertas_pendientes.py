@@ -25,12 +25,12 @@ TABLAS_Y_BASES = [
 MODO_ENVIO = int(os.getenv("MODO_ENVIO", 3))
 
 DESTINATARIOS_OFICINA = [
-    "cgonzalez@gpconsultores.cl", "erivas@gpconsultores.cl"#,
-    #"hjilberto@gpconsultores.cl", "rconstanzo@gpconsultores.cl"
+    "cgonzalez@gpconsultores.cl", "erivas@gpconsultores.cl",
+    "hjilberto@gpconsultores.cl", "rconstanzo@gpconsultores.cl"
 ]
 
 DESTINATARIOS_CLIENTE = [
-   # "vvaldebenito@pelambres.cl"
+    "vvaldebenito@pelambres.cl"
 ]
 
 if MODO_ENVIO == 1:
