@@ -19,10 +19,10 @@ SMTP_USER = os.getenv("SMTP_USER")
 SMTP_PASS = os.getenv("SMTP_PASS")
 
 DESTINATARIOS_POR_DEFECTO = [
-   #"cgonzalez@gpconsultores.cl",
-   # "hjilberto@gpconsultores.cl",
-    #"erivas@gpconsultores.cl",
-    #"rconstanzo@gpconsultores.cl"
+   "cgonzalez@gpconsultores.cl",
+    "hjilberto@gpconsultores.cl",
+    "erivas@gpconsultores.cl",
+    "rconstanzo@gpconsultores.cl"
 ]
 DESTINATARIOS_VICTOR = DESTINATARIOS_POR_DEFECTO
 UMBRAL_ENVIO_REPETICION = 3
