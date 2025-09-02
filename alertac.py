@@ -2,6 +2,7 @@
 from sqlalchemy import text
 import pandas as pd
 from datetime import datetime
+from zoneinfo import ZoneInfo
 
 from conexion import engine
 from pozos_detenidosc import detectar_pozos_detenidos, resolver_pozos_recuperados
@@ -28,7 +29,7 @@ def obtener_sensores_con_umbrales():
 def obtener_ultima_lectura(sensor_id, estacion_id):
     with engine.connect() as conn:
         result = conn.execute(text("""
-            SELECT valor_medicion, estampa_tiempo
+            SELECT estampa_tiempo AS fecha_hora, valor_medicion AS valor
             FROM `GP-MLP-Contac`.res31_mediciones
             WHERE tag_pi COLLATE utf8mb4_general_ci = (
                 SELECT tag_pi
@@ -43,7 +44,19 @@ def obtener_ultima_lectura(sensor_id, estacion_id):
         }).mappings().fetchone()
 
         if result:
-            return result["estampa_tiempo"], result["valor_medicion"]
+            fecha = result["fecha_hora"]
+            valor = result["valor"]
+
+            # 🔄 Normalizar a hora chilena
+            if fecha.tzinfo is None:
+                fecha = fecha.replace(tzinfo=ZoneInfo("UTC")).astimezone(ZoneInfo("America/Santiago"))
+            else:
+                fecha = fecha.astimezone(ZoneInfo("America/Santiago"))
+
+            # 🧽 Quitar tzinfo para que MySQL lo acepte
+            fecha = fecha.replace(tzinfo=None)
+
+            return fecha, valor
         return None, None
 
 def verificar_alertas_activas():
