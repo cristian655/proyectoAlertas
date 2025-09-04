@@ -129,7 +129,10 @@ def construir_alertas_html(alertas_con_conns):
         tipo_sensor = obtener_tipo_sensor(conn, base, a["sensor_id"])
         observacion = a.get("observacion", "-")
         fecha = a["fecha_hora"]
+
         valor = a["valor"]
+        if valor is None:   
+            valor = "--"
 
         bloques += f"""
         <div style="margin-bottom: 20px; padding: 15px; border: 1px solid #eee; border-radius: 8px;">
