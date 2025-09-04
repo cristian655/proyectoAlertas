@@ -2,8 +2,16 @@ from sqlalchemy import text
 from conexion import engine
 from logger import logger
 from enviar_correo import notificar_alerta
+from zoneinfo import ZoneInfo
 
 def registrar_alarma_persistente(sensor_id, estacion_id, fecha_hora, valor, criterio_id=2, observacion=None, algoritmos_detectores=None):
+    if fecha_hora is not None:
+        if fecha_hora.tzinfo is None:
+            fecha_hora = fecha_hora.replace(tzinfo=ZoneInfo("UTC")).astimezone(ZoneInfo("America/Santiago"))
+        else:
+            fecha_hora = fecha_hora.astimezone(ZoneInfo("America/Santiago"))
+        # 🧽 Quitar tzinfo porque MySQL no lo soporta
+        fecha_hora = fecha_hora.replace(tzinfo=None)
     with engine.begin() as conn:
         nombre_estacion = conn.execute(text("""
             SELECT nombre FROM `GP-MLP-Contac`.estaciones WHERE estacion_id = :id
