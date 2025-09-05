@@ -146,12 +146,13 @@ if __name__ == "__main__":
             limite_inf_decimal = Decimal(limite_inf) if limite_inf is not None else None
             limite_sup_decimal = Decimal(limite_sup) if limite_sup is not None else None
 
-            if (limite_inf_decimal is not None and valor_decimal <= limite_inf_decimal) or \
-               (limite_sup_decimal is not None and valor_decimal >= limite_sup_decimal):
+            if (limite_inf_decimal is not None and valor_decimal < limite_inf_decimal) or \
+               (limite_sup_decimal is not None and valor_decimal > limite_sup_decimal):
                 mensaje = (
                     f"Valor fuera de umbral en {nombre_estacion} ({tipo}): "
                     f"{valor} (umbral: {limite_inf} - {limite_sup})"
                 )
+                # 👇 Pasamos la fecha tal cual viene de la BD (sin reconversión)
                 registrar_alarma_persistente(sensor_id, estacion_id, fecha, valor, observacion=mensaje)
             else:
                 logger.info(f"[OK] Sensor {sensor_id} dentro de rango.")
@@ -173,6 +174,8 @@ if __name__ == "__main__":
     resolver_pozos_recuperados()
     logger.info("[FIN] Revisión de pozos detenidos y recuperados.")
 
-    #verificar_anomalias_por_modelo() #ESTABA LLAMANDO A LA MISMA FUNCION!!!!
+    # 👇 Ahora sí llamamos a los modelos de anomalías de Contac
+    verificar_anomalias_por_modelo()
+
     desactivar_alertas_modelo()
     limpiar_alertas_inactivas(dias=0)
