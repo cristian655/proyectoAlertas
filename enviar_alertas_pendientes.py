@@ -88,13 +88,17 @@ def obtener_tipo_sensor(conn, base, sensor_id):
 
 
 def obtener_unidad_sensor(conn, base, sensor_id):
-    tabla = "Unidades" if base == "GP-MLP-Telemtry" else "unidades"
-    campo = "unidad"
+    sensores = "Sensores" if base == "GP-MLP-Telemtry" else "sensores"
     try:
         with conn.cursor() as cursor:
-            cursor.execute(f"SELECT {campo} FROM {tabla} WHERE sensor_id = %s", (sensor_id,))
+            cursor.execute(f"""
+                SELECT u.unidad
+                FROM unidades u
+                JOIN {sensores} s ON u.id_unidad = s.id_unidad
+                WHERE s.sensor_id = %s
+            """, (sensor_id,))
             resultado = cursor.fetchone()
-            return resultado[campo] if resultado and resultado[campo] else ""
+            return resultado["unidad"] if resultado and resultado["unidad"] else ""
     except Exception as e:
         logger.error(f"[ERROR] al obtener unidad de sensor {sensor_id} en {base}: {e}")
         return ""
