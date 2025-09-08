@@ -29,7 +29,7 @@ def obtener_sensores_con_umbrales():
 def obtener_ultima_lectura(sensor_id, estacion_id):
     with engine.connect() as conn:
         result = conn.execute(text("""
-            SELECT estampa_tiempo AS fecha_hora, valor_medicion AS valor
+            SELECT estampa_tiempo, valor_medicion
             FROM `GP-MLP-Contac`.res31_mediciones
             WHERE tag_pi COLLATE utf8mb4_general_ci = (
                 SELECT tag_pi
@@ -44,20 +44,11 @@ def obtener_ultima_lectura(sensor_id, estacion_id):
         }).mappings().fetchone()
 
         if result:
-            fecha = result["fecha_hora"]
-            valor = result["valor"]
+            # 👇 devolver directamente lo que trae la BD (ya en hora Chile)
+            return result["estampa_tiempo"], result["valor_medicion"]
 
-            # 🔄 Normalizar a hora chilena
-            if fecha.tzinfo is None:
-                fecha = fecha.replace(tzinfo=ZoneInfo("UTC")).astimezone(ZoneInfo("America/Santiago"))
-            else:
-                fecha = fecha.astimezone(ZoneInfo("America/Santiago"))
-
-            # 🧽 Quitar tzinfo para que MySQL lo acepte
-            fecha = fecha.replace(tzinfo=None)
-
-            return fecha, valor
         return None, None
+
 
 def verificar_alertas_activas():
     with engine.begin() as conn:

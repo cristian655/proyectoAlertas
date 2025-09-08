@@ -28,7 +28,7 @@ def registrar_alarma_persistente(sensor_id, estacion_id, fecha_hora, valor, crit
         }).mappings().fetchone()
 
         if ultima and fecha_hora <= ultima["timestamp"]:
-            logger.info("[OMITIDA] Alarma ya registrada para sensor {}, se omite.".format(sensor_id))
+            logger.info(f"[OMITIDA] sensor {sensor_id} → nueva={fecha_hora}, ultima={ultima['timestamp']}")
             return
 
         if ultima:
@@ -45,11 +45,10 @@ def registrar_alarma_persistente(sensor_id, estacion_id, fecha_hora, valor, crit
                 "fecha_hora": fecha_hora,
                 "observacion": observacion
             })
-            logger.warning("[ALERTA] Alarma actualizada para sensor {}".format(sensor_id))
+            logger.warning(f"[ALERTA] Alarma actualizada para sensor {sensor_id}")
             notificar_alerta(tipo_sensor, nombre_estacion, valor, ultima["contador"] + 1, fecha_hora)
 
         else:
-            # timestamp_arrive = fecha_hora (hora del dato anómalo)
             fecha_llegada = fecha_hora
 
             conn.execute(text("""
@@ -67,5 +66,5 @@ def registrar_alarma_persistente(sensor_id, estacion_id, fecha_hora, valor, crit
                 "observacion": observacion,
                 "fecha_llegada": fecha_llegada
             })
-            logger.warning("[ALERTA] Nueva alarma registrada para sensor {}".format(sensor_id))
+            logger.warning(f"[ALERTA] Nueva alarma registrada para sensor {sensor_id}")
             notificar_alerta(tipo_sensor, nombre_estacion, valor, 1, fecha_hora)
