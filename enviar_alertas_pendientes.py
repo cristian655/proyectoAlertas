@@ -88,15 +88,24 @@ def obtener_tipo_sensor(conn, base, sensor_id):
 
 
 def obtener_unidad_sensor(conn, base, sensor_id):
-    sensores = "Sensores" if base == "GP-MLP-Telemtry" else "sensores"
     try:
         with conn.cursor() as cursor:
-            cursor.execute(f"""
-                SELECT u.unidad
-                FROM unidades u
-                JOIN {sensores} s ON u.id_unidad = s.id_unidad
-                WHERE s.sensor_id = %s
-            """, (sensor_id,))
+            if base == "GP-MLP-Telemtry":
+                # En Telemetry hacemos join con la tabla unidades
+                cursor.execute("""
+                    SELECT u.unidad
+                    FROM unidades u
+                    JOIN Sensores s ON u.id_unidad = s.id_unidad
+                    WHERE s.sensor_id = %s
+                """, (sensor_id,))
+            else:
+                # En Contac la unidad está directamente en la tabla sensores
+                cursor.execute("""
+                    SELECT unidad
+                    FROM sensores
+                    WHERE sensor_id = %s
+                """, (sensor_id,))
+
             resultado = cursor.fetchone()
             return resultado["unidad"] if resultado and resultado["unidad"] else ""
     except Exception as e:
