@@ -87,6 +87,19 @@ def obtener_tipo_sensor(conn, base, sensor_id):
         return f"ID {sensor_id}"
 
 
+def obtener_unidad_sensor(conn, base, sensor_id):
+    tabla = "Unidades" if base == "GP-MLP-Telemtry" else "unidades"
+    campo = "unidad"
+    try:
+        with conn.cursor() as cursor:
+            cursor.execute(f"SELECT {campo} FROM {tabla} WHERE sensor_id = %s", (sensor_id,))
+            resultado = cursor.fetchone()
+            return resultado[campo] if resultado and resultado[campo] else ""
+    except Exception as e:
+        logger.error(f"[ERROR] al obtener unidad de sensor {sensor_id} en {base}: {e}")
+        return ""
+
+
 def obtener_alertas_no_notificadas(conn, tabla, base):
     with conn.cursor() as cursor:
         campo_id = "alerta_id"
@@ -108,7 +121,7 @@ def obtener_alertas_no_notificadas(conn, tabla, base):
 
 
 # ----------------------
-# Constructor HTML sin tabla
+# Constructor HTML
 # ----------------------
 
 def construir_alertas_html(alertas_con_conns):
@@ -127,6 +140,7 @@ def construir_alertas_html(alertas_con_conns):
 
         nombre_estacion = obtener_nombre_estacion(conn, base, a["estacion_id"])
         tipo_sensor = obtener_tipo_sensor(conn, base, a["sensor_id"])
+        unidad = obtener_unidad_sensor(conn, base, a["sensor_id"])
         observacion = a.get("observacion", "-")
         fecha = a["fecha_hora"]
 
@@ -138,7 +152,7 @@ def construir_alertas_html(alertas_con_conns):
         <div style="margin-bottom: 20px; padding: 15px; border: 1px solid #eee; border-radius: 8px;">
             <p>⚠️ <strong>Alerta en el sensor {tipo_sensor}</strong></p>
             <p>Estación: <strong>{nombre_estacion}</strong></p>
-            <p>Valor medido: <strong>{valor}</strong></p>
+            <p>Valor medido: <strong>{valor} {unidad}</strong></p>
             <p>Tipo: <strong>{tipo}</strong></p>
             <p>{observacion}</p>
             <p style="color:#555; font-size: 12px;">{fecha}</p>
@@ -200,7 +214,7 @@ def main():
             print("[ALERTAS] No se encontraron alertas pendientes.")
             return
 
-        # Generar HTML sin tabla
+        # Generar HTML
         html = construir_alertas_html(todas_alertas)
         asunto = f"⚠️ Reporte Automático de Alertas [{len(todas_alertas)}]"
         print("[ENVÍO] Enviando correo...")
