@@ -2,7 +2,7 @@ from sqlalchemy import text
 from conexion import engine
 from logger import logger
 
-def detectar_pozos_detenidos(horas=3):
+def detectar_pozos_detenidos(horas=2):
     try:
         with engine.begin() as conn:
             conn.execute(text("CALL marcar_pozos_detenidos(:horas)"), {"horas": horas})
@@ -14,7 +14,7 @@ def detectar_pozos_detenidos(horas=3):
         print(f"[ERROR] {msg}")
         logger.error(msg)
 
-def resolver_pozos_recuperados():
+def resolver_pozos_recuperados(horas=2):
     try:
         with engine.begin() as conn:
             conn.execute(text("""
@@ -25,11 +25,18 @@ def resolver_pozos_recuperados():
                     JOIN Datos d ON a.sensor_id = d.sensor_id
                     WHERE a.enable = 1 AND a.criterio_id = 1
                     GROUP BY a.alerta_id
-                    HAVING TIMESTAMPDIFF(HOUR, MAX(d.fecha_hora), CONVERT_TZ(NOW(), 'UTC', 'America/Santiago')) <= 4
+                    HAVING TIMESTAMPDIFF(
+                        HOUR,
+                        MAX(d.fecha_hora),
+                        CONVERT_TZ(NOW(),'UTC','America/Santiago')
+                    ) <= :horas
                 ) t ON a.alerta_id = t.alerta_id
                 SET a.enable = 0,
-                    a.observacion = CONCAT(a.observacion, ' [RESUELTA ', NOW(), ']')
-            """))
+                    a.observacion = CONCAT(
+                        a.observacion,
+                        ' [RESUELTA ', CONVERT_TZ(NOW(),'UTC','America/Santiago'), ']'
+                    )
+            """), {"horas": horas})
             logger.info("[RESUELTAS] Alertas de detención resueltas correctamente.")
     except Exception as e:
         logger.error(f"[ERROR] en resolver_pozos_recuperados: {e}")

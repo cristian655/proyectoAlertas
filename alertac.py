@@ -162,7 +162,7 @@ if __name__ == "__main__":
 
     logger.info("[INICIO] Revisión de pozos detenidos...")
     detectar_pozos_detenidos(horas=2)
-    resolver_pozos_recuperados()
+    resolver_pozos_recuperados(horas=2)
     logger.info("[FIN] Revisión de pozos detenidos y recuperados.")
 
     # 👇 Ahora sí llamamos a los modelos de anomalías de Contac
