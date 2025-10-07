@@ -1,20 +1,36 @@
 # enviar_alertas_pendientes.py
-
 import os
 import pymysql
 from dotenv import load_dotenv
 from datetime import datetime
-from enviar_correo import enviar_correo_html_con_logo, logger, SMTP_USER, SMTP_PASS
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+from email.mime.image import MIMEImage
 import sys
+import logging
 
-# Cargar variables de entorno
+# ---------------------------
+# Configuración inicial
+# ---------------------------
+
 load_dotenv()
 
-# Configuración de base de datos
+logging.basicConfig(level=logging.INFO, format='[%(levelname)s] %(message)s')
+logger = logging.getLogger(__name__)
+
+# Configuración base de datos
 DB_HOST = os.getenv("DB_HOST")
 DB_USER = os.getenv("DB_USER")
 DB_PASS = os.getenv("DB_PASSWORD")
 DB_PORT = int(os.getenv("DB_PORT", 3306))
+
+# Configuración SMTP
+SMTP_SERVER = "email-smtp.us-east-1.amazonaws.com"
+SMTP_PORT = 587
+SMTP_USER = os.getenv("SMTP_USER")
+SMTP_PASS = os.getenv("SMTP_PASS")
+REMITENTE = "info@gptelemetria.cl"
 
 # Bases de datos y tablas
 TABLAS_Y_BASES = [
@@ -22,16 +38,14 @@ TABLAS_Y_BASES = [
     ("GP-MLP-Contac", "alertas")
 ]
 
+# Modo de envío: 1 = solo oficina / 2 = solo cliente / 3 = ambos
 MODO_ENVIO = int(os.getenv("MODO_ENVIO", 3))
 
 DESTINATARIOS_OFICINA = [
-    "cgonzalez@gpconsultores.cl", "erivas@gpconsultores.cl",
-    "hjilberto@gpconsultores.cl", "rconstanzo@gpconsultores.cl"
-]
-
-DESTINATARIOS_CLIENTE = [
-    "vvaldebenito@pelambres.cl"
-]
+    "cgonzalez@gpconsultores.cl"]#, "erivas@gpconsultores.cl",
+    #"hjilberto@gpconsultores.cl", "rconstanzo@gpconsultores.cl"
+#]
+DESTINATARIOS_CLIENTE = []#"vvaldebenito@pelambres.cl"]
 
 if MODO_ENVIO == 1:
     DESTINATARIOS = DESTINATARIOS_OFICINA
@@ -41,9 +55,70 @@ else:
     DESTINATARIOS = DESTINATARIOS_OFICINA + DESTINATARIOS_CLIENTE
 
 
-# ----------------------
+# ---------------------------
+# Función de envío autónoma
+# ---------------------------
+
+def enviar_correo_html_con_logo(destinatarios, asunto, cuerpo_html, path_logo):
+    """
+    Envío de correo HTML con logo (autónomo, sin depender de enviar_correo.py)
+    """
+    if not SMTP_USER or not SMTP_PASS:
+        print("[ERROR] Credenciales SMTP no cargadas. Revisa tu archivo .env")
+        return
+
+    if not os.path.exists(path_logo):
+        print(f"[ERROR] Logo no encontrado en la ruta: {path_logo}")
+        return
+
+    msg = MIMEMultipart("related")
+    msg["From"] = REMITENTE
+    msg["To"] = ", ".join(destinatarios)
+    msg["Subject"] = asunto
+
+    msg_alt = MIMEMultipart("alternative")
+    msg.attach(msg_alt)
+
+    html_con_logo = f"""
+    <html>
+      <body style="font-family: Arial, sans-serif; background-color: #f4f6f8; padding: 20px;">
+        <div style="max-width:600px;margin:auto;background:#fff;padding:20px;border-radius:8px;">
+          <div style="display:flex;align-items:center;margin-bottom:15px;">
+            <img src="cid:logo_gp" width="100" alt="GP Consultores" style="margin-right:15px;" />
+            <h2 style="color:#018ae4;margin:0;">Reporte Automático de Alertas</h2>
+          </div>
+          {cuerpo_html}
+          <hr style="margin-top:30px;border:none;border-top:1px solid #eee;" />
+          <p style="font-size:12px;color:#999;text-align:center;">
+            Este correo fue generado automáticamente por el sistema de monitoreo.<br>
+            <em>No responder a esta dirección.</em>
+          </p>
+        </div>
+      </body>
+    </html>
+    """
+
+    msg_alt.attach(MIMEText(html_con_logo, "html"))
+
+    try:
+        with open(path_logo, "rb") as f:
+            logo = MIMEImage(f.read())
+            logo.add_header("Content-ID", "<logo_gp>")
+            msg.attach(logo)
+
+        with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as servidor:
+            servidor.starttls()
+            servidor.login(SMTP_USER, SMTP_PASS)
+            servidor.sendmail(REMITENTE, destinatarios, msg.as_string())
+
+        print(f"[OK] Correo enviado a {destinatarios}")
+    except Exception as e:
+        print(f"[ERROR] Fallo al enviar correo: {e}")
+
+
+# ---------------------------
 # Funciones auxiliares
-# ----------------------
+# ---------------------------
 
 def conectar_bd(base):
     return pymysql.connect(
@@ -91,7 +166,6 @@ def obtener_unidad_sensor(conn, base, sensor_id):
     try:
         with conn.cursor() as cursor:
             if base == "GP-MLP-Telemtry":
-                # En Telemetry hacemos join con la tabla unidades
                 cursor.execute("""
                     SELECT u.unidad
                     FROM unidades u
@@ -99,11 +173,8 @@ def obtener_unidad_sensor(conn, base, sensor_id):
                     WHERE s.sensor_id = %s
                 """, (sensor_id,))
             else:
-                # En Contac la unidad está directamente en la tabla sensores
                 cursor.execute("""
-                    SELECT unidad
-                    FROM sensores
-                    WHERE sensor_id = %s
+                    SELECT unidad FROM sensores WHERE sensor_id = %s
                 """, (sensor_id,))
 
             resultado = cursor.fetchone()
@@ -127,15 +198,8 @@ def obtener_alertas_no_notificadas(conn, tabla, base):
               AND enable = 1
             ORDER BY {campo_fecha} DESC
         ''')
-        alertas = cursor.fetchall()
-        for alerta in alertas:
-            logger.info(f"[DEBUG] Alerta encontrada en {base}: {alerta}")
-        return alertas
+        return cursor.fetchall()
 
-
-# ----------------------
-# Constructor HTML
-# ----------------------
 
 def construir_alertas_html(alertas_con_conns):
     if not alertas_con_conns:
@@ -144,22 +208,13 @@ def construir_alertas_html(alertas_con_conns):
     bloques = ""
     for base, _, conn, a in alertas_con_conns:
         criterio = a["criterio_id"]
-        if criterio == 1:
-            tipo = "Falla de comunicación"
-        elif criterio == 2:
-            tipo = "Umbral"
-        else:
-            tipo = f"Criterio {criterio}"
-
+        tipo = "Falla de comunicación" if criterio == 1 else "Umbral"
         nombre_estacion = obtener_nombre_estacion(conn, base, a["estacion_id"])
         tipo_sensor = obtener_tipo_sensor(conn, base, a["sensor_id"])
         unidad = obtener_unidad_sensor(conn, base, a["sensor_id"])
         observacion = a.get("observacion", "-")
         fecha = a["fecha_hora"]
-
-        valor = a["valor"]
-        if valor is None:   
-            valor = "--"
+        valor = a["valor"] if a["valor"] is not None else "--"
 
         bloques += f"""
         <div style="margin-bottom: 20px; padding: 15px; border: 1px solid #eee; border-radius: 8px;">
@@ -193,9 +248,9 @@ def marcar_alertas_como_notificadas(conn, tabla, base, ids):
         conn.commit()
 
 
-# ----------------------
+# ---------------------------
 # Script principal
-# ----------------------
+# ---------------------------
 
 def main():
     todas_alertas = []
@@ -203,6 +258,7 @@ def main():
 
     print(f"SMTP_USER: {SMTP_USER}")
     print(f"SMTP_PASS: {'CARGADO' if SMTP_PASS else 'NO CARGADO'}")
+
     if not SMTP_USER or not SMTP_PASS:
         print("[ERROR] Las credenciales SMTP no están cargadas. Revisa tu archivo .env")
         sys.exit(1)
@@ -218,23 +274,19 @@ def main():
             alertas = obtener_alertas_no_notificadas(conn, tabla, base)
 
             print(f"[{base}] Alertas detectadas: {len(alertas)}")
-            for a in alertas:
-                print(a)
-
             todas_alertas.extend([(base, tabla, conn, a) for a in alertas])
 
         if not todas_alertas:
             print("[ALERTAS] No se encontraron alertas pendientes.")
             return
 
-        # Generar HTML
         html = construir_alertas_html(todas_alertas)
         asunto = f"⚠️ Reporte Automático de Alertas [{len(todas_alertas)}]"
         print("[ENVÍO] Enviando correo...")
         enviar_correo_html_con_logo(DESTINATARIOS, asunto, html, "gp-fullcolor-centrado.png")
         print("[ENVÍO] Correo enviado")
 
-        # Marcar alertas como notificadas
+        # Marcar como notificadas
         for conn, base, tabla in [(c[0], c[1], c[2]) for c in conexiones]:
             ids = [a[3]['alerta_id'] for a in todas_alertas if a[0] == base and a[1] == tabla]
             print(f"[MARCAR] Marcando como notificadas en {base}: {ids}")
